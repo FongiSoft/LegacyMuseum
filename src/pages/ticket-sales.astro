@@ -1,0 +1,189 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+---
+
+<style>
+  /* General reset and responsive styles */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  h1, h2 {
+    color: #333;
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  input[type="radio"], input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+
+  .payment-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 2rem;
+    background-color: #f9f9f9;
+  }
+
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+      width: 100%;
+    }
+
+    h1, h2 {
+      font-size: 1.5rem;
+    }
+
+    .payment-options {
+      grid-template-columns: 1fr;
+    }
+
+    .btn {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+  }
+
+  /* Very small screen adjustments */
+  @media (max-width: 480px) {
+    h1, h2 {
+      font-size: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+      font-size: 0.9rem;
+      padding: 0.6rem;
+    }
+  }
+</style>
+
+<Layout title="Venta de Boletos">
+  <div class="container">
+    <h1>The Legacy Museum</h1>
+    <h2>Venta de Boletos</h2>
+
+    <div class="form-group">
+      <label for="exhibition">Buscar Exhibición</label>
+      <input type="text" id="exhibition" placeholder="Buscar Exhibición" />
+    </div>
+
+    <div class="form-group">
+      <label for="date">Fecha</label>
+      <input type="date" id="date" />
+    </div>
+
+    <div class="form-group">
+      <label for="ticketType">Elegir tipo de Boleto</label>
+      <select id="ticketType">
+        <option value="basic">Time Traveler (básico)</option>
+        <option value="vip">Legacy Explorer VIP</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Cantidad</label>
+      <input type="number" id="quantity" value="1" />
+    </div>
+
+    <!-- Forma de pago con dos columnas que se ajusta en pantallas pequeñas -->
+    <div class="form-group">
+      <label>Forma de Pago</label>
+      <div class="payment-options">
+        <div>
+          <input type="radio" id="cash" name="payment" value="cash" />
+          <label for="cash">Efectivo</label>
+        </div>
+        <div>
+          <input type="radio" id="card" name="payment" value="card" />
+          <label for="card">Tarjeta</label>
+        </div>
+        <div>
+          <input type="radio" id="other" name="payment" value="other" />
+          <label for="other">Otro</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="promotion">Promoción a Aplicar</label>
+      <input type="checkbox" id="promotion" />
+    </div>
+
+    <Card>
+      <h3>Boletos por Adquirir</h3>
+      <p>Total: $500</p>
+      <button class="btn">Confirmar Transacción</button>
+    </Card>
+  </div>
+</Layout>
