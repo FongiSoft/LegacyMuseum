@@ -1,16 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
 ---
 
-<Layout title="Consulta de Orden">
+<Layout title="Cancelación de Orden">
 	<div class="form-container">
-	  <h1 class="form-title">Consulta de Orden</h1>
+	  <h1 class="form-title">Cancelación de Orden</h1>
   
 	  <form class="form-grid-wide">
 		
 		<div class="form-group">
-		  <label>Orden !</label>
+		  <label>Orden *</label>
 		  <select>
 			<option>Dropdown text</option>
 		  </select>
@@ -108,15 +108,15 @@ import Card from '../components/Card.astro';
 		  <input type="text" placeholder="double (2)" />
 		</div>
 		<div class="form-group">
-		  <label>Descripción !</label>
+		  <label>Detalles de cancelación *</label>
 		  <input type="text" placeholder="s (300)" />
 		</div>
 	  </form>
   
 	  
 	  <div class="form-actions">
-		<button class="btn-primary">Regresar</button>
-
+		<button class="btn-primary">Eliminar</button>
+		<button class="btn-secondary">Cancelar</button>
 	  </div>
 	</div>
   </Layout>

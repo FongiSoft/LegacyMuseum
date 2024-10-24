@@ -1,102 +1,102 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
 ---
 
-<Layout title="Consulta de Orden">
+<Layout title="Alta de Orden">
 	<div class="form-container">
-	  <h1 class="form-title">Consulta de Orden</h1>
+	  <h1 class="form-title">Alta de Orden</h1>
   
 	  <form class="form-grid-wide">
 		
 		<div class="form-group">
-		  <label>Orden !</label>
+		  <label>Orden *</label>
 		  <select>
 			<option>Dropdown text</option>
 		  </select>
 		</div>
 		<div class="form-group">
-		  <label>Número !</label>
+		  <label>Número *</label>
 		  <input type="text" placeholder="int (10)" />
 		</div>
 		<div class="form-group">
-		  <label>Fecha !</label>
+		  <label>Fecha *</label>
 		  <input type="date" placeholder="MM/DD/YYYY" />
 		</div>
 		<div class="form-group">
-		  <label>Proveedor !</label>
+		  <label>Proveedor *</label>
 		  <input type="text" placeholder="int (2)" />
 		</div>
   
 		
 		<div class="form-group">
-		  <label>RFC !</label>
+		  <label>RFC *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
 		<div class="form-group">
-		  <label>Nombre !</label>
+		  <label>Nombre *</label>
 		  <input type="text" placeholder="s (100)" />
 		</div>
 		<div class="form-group">
-		  <label>Calle !</label>
+		  <label>Calle *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
 		<div class="form-group">
-		  <label>Almacén !</label>
+		  <label>Almacén *</label>
 		  <input type="text" placeholder="int (2)" />
 		</div>
   
 		
 		<div class="form-group">
-		  <label>Número ext. !</label>
+		  <label>Número ext. *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
 		<div class="form-group">
-		  <label>Descuento !</label>
+		  <label>Descuento *</label>
 		  <input type="text" placeholder="double (2)" />
 		</div>
 		<div class="form-group">
-		  <label>Número int. !</label>
+		  <label>Número int. *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
 		<div class="form-group">
-		  <label>Descuento final !</label>
+		  <label>Descuento final *</label>
 		  <input type="text" placeholder="double (2)" />
 		</div>
   
 		
 		<div class="form-group">
-		  <label>Colonia !</label>
+		  <label>Colonia *</label>
 		  <input type="text" placeholder="s (100)" />
 		</div>
 		<div class="form-group">
-		  <label>Gastos ind. !</label>
+		  <label>Gastos ind. *</label>
 		  <input type="text" placeholder="double (2)" />
 		</div>
 		<div class="form-group">
-		  <label>Código postal !</label>
+		  <label>Código postal *</label>
 		  <input type="text" placeholder="s (10)" />
 		</div>
 		<div class="form-group">
-		  <label>Población !</label>
+		  <label>Población *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
   
 		
 		<div class="form-group">
-		  <label>País !</label>
+		  <label>País *</label>
 		  <input type="text" placeholder="s (50)" />
 		</div>
 		<div class="form-group">
-		  <label>Fecha de recepción !</label>
+		  <label>Fecha de recepción *</label>
 		  <input type="date" placeholder="MM/DD/YYYY" />
 		</div>
 		<div class="form-group">
-		  <label>Entregar a: !</label>
+		  <label>Entregar a: *</label>
 		  <input type="text" placeholder="s (100)" />
 		</div>
 		<div class="form-group">
-		  <label>Moneda !</label>
+		  <label>Moneda *</label>
 		  <select>
 			<option>Dropdown text</option>
 		  </select>
@@ -104,19 +104,19 @@ import Card from '../components/Card.astro';
   
 		
 		<div class="form-group">
-		  <label>T. cambio !</label>
+		  <label>T. cambio *</label>
 		  <input type="text" placeholder="double (2)" />
 		</div>
 		<div class="form-group">
-		  <label>Descripción !</label>
+		  <label>Descripción *</label>
 		  <input type="text" placeholder="s (300)" />
 		</div>
 	  </form>
   
 	  
 	  <div class="form-actions">
-		<button class="btn-primary">Regresar</button>
-
+		<button class="btn-primary">Agregar</button>
+		<button class="btn-secondary">Cancelar</button>
 	  </div>
 	</div>
   </Layout>
