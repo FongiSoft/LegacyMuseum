@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Legacy Museum - Consulta de Reservas</title>
+    <link rel="stylesheet" href="consulta.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <a href="#" class="sidebar-item">Central</a>
+        <a href="#" class="sidebar-item">Eventos</a>
+        <a href="#" class="sidebar-item">Usuarios</a>
+        <a href="#" class="sidebar-item">Corte de Caja</a>
+        <a href="#" class="sidebar-item">Configuración</a>
+        <a href="#" class="sidebar-item">Cerrar Sesión</a>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="header">The Legacy Museum</h1>
+
+        <section class="search-section">
+            <h2 class="search-title">Consulta de Reservas</h2>
+            <form class="search-form">
+                <div class="form-group">
+                    <label class="form-label">Número de Reserva</label>
+                    <input type="text" class="form-input" placeholder="Ingrese el número de reserva">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-input">
+                </div>
+                <button type="submit" class="search-button">Buscar</button>
+            </form>
+        </section>
+
+        <section class="results-section">
+            <div class="results-header">
+                <h3 class="results-title">Resultados de la búsqueda</h3>
+            </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Nº Reserva</th>
+                        <th>Fecha</th>
+                        <th>Exhibición</th>
+                        <th>Tipo de Boleto</th>
+                        <th>Cantidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RES-2024-001</td>
+                        <td>23/10/2024</td>
+                        <td>Historia Moderna</td>
+                        <td>Time Traveler</td>
+                        <td>2</td>
+                        <td><span class="status-badge status-active">Activa</span></td>
+                        <td>
+                            <button class="action-button">Ver detalles</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>RES-2024-002</td>
+                        <td>22/10/2024</td>
+                        <td>Arte Contemporáneo</td>
+                        <td>Legacy Explorer VIP</td>
+                        <td>4</td>
+                        <td><span class="status-badge status-completed">Completada</span></td>
+                        <td>
+                            <button class="action-button">Ver detalles</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer class="footer">
+            ©2023 Zettabyte Solutions
+        </footer>
+    </main>
+</body>
+</html>

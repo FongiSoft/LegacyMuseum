@@ -1,0 +1,101 @@
+---
+const title = "The Legacy Museum - Reserva de Boletos";
+---
+<title>{title}</title>
+<link rel="stylesheet" href="reserva.css">
+
+<nav class="sidebar">
+    <a href="#" class="sidebar-item">Central</a>
+    <a href="#" class="sidebar-item">Eventos</a>
+    <a href="#" class="sidebar-item">Usuarios</a>
+    <a href="#" class="sidebar-item">Corte de Caja</a>
+    <a href="#" class="sidebar-item">Configuración</a>
+    <a href="#" class="sidebar-item">Cerrar Sesión</a>
+</nav>
+
+<main class="main-content">
+    <h1 class="header">The Legacy Museum</h1>
+    <h2 class="reservation-title">Reserva de boletos</h2>
+
+    <div class="image-placeholder">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#666">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+    </div>
+
+    <div class="form-container">
+        <div class="left-column">
+            <div class="form-group">
+                <label class="form-label">Buscar Exhibición<span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="$ (150)">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Fecha<span class="required">*</span></label>
+                <input type="date" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Elegir tipo de Boleto<span class="required">*</span></label>
+                <select class="form-input">
+                    <option>Time Traveler(básico)</option>
+                    <option>Legacy Explorer VIP</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Cantidad<span class="required">*</span></label>
+                <input type="number" class="form-input" value="2">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Forma de Pago</label>
+                <div class="payment-methods">
+                    <div class="payment-option">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="2" y="4" width="20" height="16" rx="2" stroke-width="2"/>
+                            <path d="M2 10h20" stroke-width="2"/>
+                        </svg>
+                        <span>Efectivo</span>
+                    </div>
+                    <div class="payment-option">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="2" y="4" width="20" height="16" rx="2" stroke-width="2"/>
+                            <path d="M7 12h10" stroke-width="2"/>
+                        </svg>
+                        <span>Tarjeta</span>
+                    </div>
+                    <div class="payment-option">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <path d="M12 6v12M6 12h12" stroke-width="2"/>
+                        </svg>
+                        <span>Otro</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promotion-toggle">
+                <span>Promoción a Aplicar</span>
+                <div class="toggle-switch"></div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="ticket-summary">
+                <h3>Boletos por Adquirir</h3>
+                <p style="margin: 20px 0; font-size: 24px;">$ 500</p>
+                <button class="confirm-button">
+                    Confirmar Transacción
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        ©2023 Zettabyte Solutions
+    </footer>
+</main>
