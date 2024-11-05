@@ -1,0 +1,11 @@
+---
+const path = Astro.url.pathname.replace(/\/$/, ""); // Elimina el "/" al final si existe.
+const previousPath = path.substring(0, path.lastIndexOf("/")) || "/";
+---
+
+<a
+  href={previousPath}
+  class="inline-block px-4 py-2 mr-4 text-white duration-150 font-medium bg-LegacyBlue-400 rounded-lg hover:bg-LegacyBlue-500 active:bg-LegacyBlue-700 md:text-sm capitalize"
+>
+  <p class="text-lg">back</p>
+</a>

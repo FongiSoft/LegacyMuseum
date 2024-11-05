@@ -1,0 +1,20 @@
+---
+interface Props {
+  paths: Array<String>;
+  index: number;
+}
+
+const { paths, index } = Astro.props;
+const path = paths[index];
+---
+
+<a
+  href={`/${paths.slice(0, index + 1).join("/")}`}
+  class={`hover:underline capitalize ${
+    index === paths.length - 1
+      ? "text-LegacyBlue-600 dark:text-LegacyBlue-400 dark:hover:text-LegacyBlue-300"
+      : "text-gray-600 dark:text-gray-400 dark:hover:text-white"
+  }`}
+>
+  {path}
+</a>

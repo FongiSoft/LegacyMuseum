@@ -1,0 +1,58 @@
+---
+import SideBarLink from "./SideBarLink.astro";
+import TicketIcon from "@icons/TicketIcon.astro";
+import VipCardIcon from "@icons/VipCardIcon.astro";
+import Divider from "../Divider.astro";
+import DashBoardIcon from "@icons/DashBoardIcon.astro";
+import MiniProfile from "./MiniProfile.astro";
+import WrenchIcon from "@icons/WrenchIcon.astro";
+import ProductIcon from "@icons/ProductIcon.astro";
+import WarehouseIcon from "@icons/WarehouseIcon.astro";
+import ClipboardListIcon from "@icons/ClipboardListIcon.astro";
+import SalesIcon from "@icons/SalesIcon.astro";
+---
+
+<aside
+  class="flex flex-col w-64 h-screen p-4 bg-white border-r dark:bg-gray-900 dark:border-gray-700"
+>
+  <div class="flex flex-col justify-between flex-1">
+    <nav>
+      <SideBarLink href="/">
+        <DashBoardIcon slot="icon" />
+        Dashboard
+      </SideBarLink>
+
+      <Divider />
+
+      <SideBarLink href="/tickets">
+        <TicketIcon slot="icon" />
+        Tickets
+      </SideBarLink>
+      <SideBarLink href="/vipcard">
+        <VipCardIcon slot="icon" />
+        VIP Cards
+      </SideBarLink>
+      <SideBarLink href="/manteinance">
+        <WrenchIcon slot="icon" />
+        Manteinance
+      </SideBarLink>
+      <SideBarLink href="/products">
+        <ProductIcon slot="icon" />
+        Products
+      </SideBarLink>
+      <SideBarLink href="/warehouse">
+        <WarehouseIcon slot="icon" />
+        Warehouse
+      </SideBarLink>
+      <SideBarLink href="/purchaseOrders">
+        <ClipboardListIcon slot="icon" />
+        Purchase Order
+      </SideBarLink>
+      <SideBarLink href="/sales">
+        <SalesIcon slot="icon" />
+        Sales
+      </SideBarLink>
+    </nav>
+    <MiniProfile name="Pepe Pecas" />
+  </div>
+</aside>

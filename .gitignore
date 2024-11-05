@@ -16,9 +16,11 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+VIPcardData.json
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+.vercel
