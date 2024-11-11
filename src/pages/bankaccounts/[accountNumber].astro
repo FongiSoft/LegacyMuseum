@@ -1,23 +1,39 @@
----
+--- 
 import BackBtn from "@components/ui/Buttons/BackBtn.astro";
 import Layout from "../../layouts/Layout.astro";
 import BankAccountForm from "@components/BankAccount/BankAccountForm.astro";
-import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
 import { turso } from "src/turso";
-import convertBankAccountDataToJSON from "@functions/ConvertBADataToJSON";
+import { convertBankAccountDataToJSON } from "@functions/ConvertBankAccountDataToJSON";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
 
+// Obtener el bankAccountID de los parámetros de la URL
 const { bankAccountID } = Astro.params;
-const rows = await turso.execute(`SELECT * FROM BankAccounts WHERE bankAccountID =  ${bankAccountID}`);
 
-// Convertir a formato JSON deseado
+// Consultar la información de la cuenta bancaria y su relación con las demás tablas
+const rows = await turso.execute(`
+  SELECT ba.bankAccountID, ba.bankID, ba.entityID, ba.entityType, ba.currencyID, ba.accountTypeID, ba.statusID, ba.bicCode, 
+         b.bankName, b.bankCode, b.phoneNumb, b.email, 
+         c.currencyName, c.exchangeRate, c.description AS currencyDescription,
+         at.accountTypeName,
+         s.statusDescription
+  FROM BankAccounts ba
+  LEFT JOIN Banks b ON ba.bankID = b.bankID
+  LEFT JOIN Currencies c ON ba.currencyID = c.currencyID
+  LEFT JOIN AccountTypes at ON ba.accountTypeID = at.accountTypeID
+  LEFT JOIN Status s ON ba.statusID = s.statusID
+  WHERE ba.bankAccountID = ${bankAccountID}
+`);
+
+// Convertir los resultados a formato JSON
 const result = convertBankAccountDataToJSON(rows.toJSON());
 ---
-<Layout title="Editar">
+
+<Layout title="Editar Cuenta Bancaria">
   <BankAccountForm selectedAccount={result[0]}>
     <div class="flex justify-end max-w-full mx-auto px-8">
       <BackBtn />
       <SubmitBtn>
-        Update
+        Actualizar
       </SubmitBtn>
     </div>
   </BankAccountForm>

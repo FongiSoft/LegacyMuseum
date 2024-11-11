@@ -1,99 +1,64 @@
 ---
-import FormInput from "@components/ui/Forms/FormInput.astro"; 
-import FormSelect from "@components/ui/Forms/FormSelect.astro"; 
+import FormInput from "@components/ui/Forms/FormInput.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+
+// Aquí puedes hacer una llamada a la base de datos para obtener los valores dinámicamente
+const banks = await fetch('/api/banks'); // API que obtiene la lista de bancos
+const currencies = await fetch('/api/currencies'); // API que obtiene la lista de monedas
+const accountTypes = await fetch('/api/account-types'); // API que obtiene los tipos de cuentas
+const statusList = await fetch('/api/status'); // API que obtiene los estados
 ---
 
 <form class="max-w-full mx-auto p-8">
-  <h2 class="text-2xl dark:text-white font-bold mb-6">Card Data</h2>
+  <h2 class="text-2xl dark:text-white font-bold mb-6">Bank Account Data</h2>
 
-  <!-- Campo de Número de tarjeta -->
-  <FormInput name="cardNumber" type="number" placeholder="1234567890123456789012" isDisabled>
-    Card Number
+  <FormSelect name="bankID" title="Bank" isRequired>
+    <option value="">Select a Bank</option>
+    {banks.map((bank) => (
+      <option value={bank.bankID}>{bank.bankName}</option>
+    ))}
+  </FormSelect>
+
+  <FormSelect name="currencyID" title="Currency" isRequired>
+    <option value="">Select a Currency</option>
+    {currencies.map((currency) => (
+      <option value={currency.currencyID}>{currency.currencyName}</option>
+    ))}
+  </FormSelect>
+
+  <FormSelect name="accountTypeID" title="Account Type" isRequired>
+    <option value="">Select Account Type</option>
+    {accountTypes.map((type) => (
+      <option value={type.accountTypeID}>{type.accountTypeName}</option>
+    ))}
+  </FormSelect>
+
+  <FormSelect name="statusID" title="Status" isRequired>
+    <option value="">Select Account Status</option>
+    {statusList.map((status) => (
+      <option value={status.statusID}>{status.statusName}</option>
+    ))}
+  </FormSelect>
+
+  <FormInput name="bicCode" type="text" placeholder="BIC Code" isRequired>
+    BIC Code
   </FormInput>
 
-  <!-- Campo de Email -->
-  <FormInput name="email" type="email" isRequired placeholder="johndoe@mail.com">
-    Email
-  </FormInput>
+  <FormSelect name="entityType" title="Entity Type" isRequired>
+    <option value="">Select Entity Type</option>
+    <option value="customer">Customer</option>
+    <option value="supplier">Supplier</option>
+    <option value="employee">Employee</option>
+  </FormSelect>
 
-  <h3 class="text-xl dark:text-white font-semibold mb-4">Back Account</h3>
-
-  <!-- Grupo de campos relacionados con la cuenta bancaria -->
+  <!-- Additional Fields -->
   <div class="flex flex-wrap gap-4">
-    <!-- Número de cuenta -->
-    <FormInput name="accountNumber" type="number" placeholder="1234567890123456789012">
+    <FormInput name="entityID" type="number" placeholder="Entity ID" isRequired>
+      Entity ID
+    </FormInput>
+
+    <FormInput name="accountNumber" type="number" placeholder="Account Number" isRequired>
       Account Number
-    </FormInput>
-
-    <!-- Selección de tipo de cuenta -->
-    <FormSelect name="accountType" title="Type" isDisabled>
-      <option value="">Selecciona un tipo de cuenta</option>
-      <option value="corriente" selected>Corriente</option>
-      <option value="ahorro">Ahorro</option>
-      <option value="nomina">Nómina</option>
-      <option value="inversion">Inversión</option>
-      <option value="joven">Joven</option>
-      <option value="pensiones">Pensiones</option>
-    </FormSelect>
-    
-    <!-- Selección de divisa -->
-    <FormSelect title="Currency" name="currency" isDisabled>
-      <option value="">Selecciona una divisa</option>
-      <option value="usd">Dólar Estadounidense (USD)</option>
-      <option value="eur">Euro (EUR)</option>
-      <option value="mxn" selected>Peso Mexicano (MXN)</option>
-      <option value="gbp">Libra Esterlina (GBP)</option>
-      <option value="jpy">Yen Japonés (JPY)</option>
-      <option value="cad">Dólar Canadiense (CAD)</option>
-      <option value="chf">Franco Suizo (CHF)</option>
-      <option value="cny">Yuan Chino (CNY)</option>
-    </FormSelect>
-
-    <!-- Código BIC -->
-    <FormInput name="bicCode" type="text" isDisabled placeholder="1234567890123456789012">
-      Código BIC
-    </FormInput>
-  </div>
-
-  <h3 class="text-xl dark:text-white font-semibold mb-4">Owner Information</h3>
-
-  <!-- Grupo de campos relacionados con la información del dueño -->
-  <div class="flex flex-wrap gap-4">
-    <!-- Nombre del dueño -->
-    <FormInput name="ownerName" type="text" isDisabled placeholder="John">
-      Name
-    </FormInput>
-    
-    <!-- Apellido paterno -->
-    <FormInput name="ownerPtrlSurname" type="text" isDisabled placeholder="Doe">
-      Paternal surname
-    </FormInput>
-    
-    <!-- Apellido materno -->
-    <FormInput name="ownerMtrlSurname" type="text" isDisabled placeholder="Doe">
-      Maternal surname
-    </FormInput>
-
-    <!-- RFC -->
-    <FormInput name="rfc" type="text" isDisabled placeholder="VECJ880326">
-      RFC
-    </FormInput>
-  </div>
-
-  <div class="flex flex-wrap gap-4">
-    <!-- Teléfono -->
-    <FormInput name="phoneNumber" type="tel" isDisabled placeholder="1234567890">
-      Phone Number
-    </FormInput>
-
-    <!-- Dirección -->
-    <FormInput name="address" type="text" isDisabled placeholder="215 E Tasman Dr Po Box 65502 CA 95134 San Jose">
-      Address
-    </FormInput>
-
-    <!-- Fecha de nacimiento -->
-    <FormInput name="birthDate" type="date" isDisabled>
-      Birth Date
     </FormInput>
   </div>
 </form>
