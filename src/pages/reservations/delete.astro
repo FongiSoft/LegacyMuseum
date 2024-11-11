@@ -1,0 +1,12 @@
+---
+import { turso } from "src/turso";
+
+const reservationID = Astro.url.searchParams.get("reservationID");
+
+if (reservationID) {
+  // Ejecuta la eliminación en la tabla 'Reservations'
+  await turso.execute(`DELETE FROM Reservations WHERE reservationID = ${reservationID}`);
+}
+
+return Astro.redirect('/reservations');
+---

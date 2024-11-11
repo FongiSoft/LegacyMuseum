@@ -9,11 +9,13 @@ interface Props {
   placeholder?: string;
   value?: string | number;
   isDisabled?: boolean;
+  step?: string; // Asegúrate de que `step` esté incluido en la interfaz de Props
 }
 
 const { title, type, placeholder, isRequired, name, value, isDisabled } =
   Astro.props;
 ---
+
 
 <div class="flex-1 mb-4">
   <label

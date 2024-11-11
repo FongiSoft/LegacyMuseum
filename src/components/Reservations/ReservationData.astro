@@ -1,0 +1,95 @@
+---
+import Form from "@components/ui/Forms/Form.astro";
+import FormInput from "@components/ui/Forms/FormInput.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import type { ReservationData } from "@customTypes/ReservationData";
+
+interface Props {
+  selectedReservation?: ReservationData;
+}
+
+const { selectedReservation } = Astro.props;
+---
+
+<Form title="Reservation Data">
+  {
+    !selectedReservation 
+    ?
+      <>
+        <FormInput name="reservationID" type="number" placeholder="Reservation ID" isRequired>
+          Reservation ID
+        </FormInput>
+        <FormInput name="customerID" type="number" placeholder="Customer ID" isRequired>
+          Customer ID
+        </FormInput>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="reservationDate" type="date" placeholder="Reservation Date" isRequired>
+            Date
+          </FormInput>
+          
+          <FormInput name="total" type="number" step="0.01" placeholder="Total Amount" isRequired>
+            Total Amount
+          </FormInput>
+
+          <FormSelect name="statusID" title="Status">
+            <SelectOption value="1">Confirmed</SelectOption>
+            <SelectOption value="2">Cancelled</SelectOption>
+            <SelectOption value="3">Pending</SelectOption>
+          </FormSelect>
+        </div>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Payment and Quantity</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="paymentMethodID" type="number" placeholder="Payment Method ID">
+            Payment Method ID
+          </FormInput>
+          <FormInput name="quantity" type="number" placeholder="Ticket Quantity">
+            Quantity
+          </FormInput>
+        </div>
+      </>
+    :
+      <>
+        <FormInput name="reservationID" type="number" value={selectedReservation.reservationID.toString()} isDisabled placeholder="Reservation ID">
+          Reservation ID
+        </FormInput>
+        <FormInput name="customerID" type="number" value={selectedReservation.customerID.toString()} isDisabled placeholder="Customer ID">
+          Customer ID
+        </FormInput>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="reservationDate" type="date" value={selectedReservation.reservationDate.toISOString().split('T')[0]} placeholder="Reservation Date" isDisabled>
+            Date
+          </FormInput>
+
+          <FormInput name="total" type="number" step="0.01" value={selectedReservation.total.toFixed(2)} placeholder="Total Amount" isDisabled>
+            Total Amount
+          </FormInput>
+
+          <FormSelect name="statusID" title="Status" isDisabled>
+            <SelectOption value={selectedReservation.statusID.toString()} isSelected>
+              {selectedReservation.statusID === 1 ? "Confirmed" : selectedReservation.statusID === 2 ? "Cancelled" : "Pending"}
+            </SelectOption>
+          </FormSelect>
+        </div>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Payment and Quantity</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="paymentMethodID" type="number" value={selectedReservation.paymentMethodID.toString()} placeholder="Payment Method ID" isDisabled>
+            Payment Method ID
+          </FormInput>
+          <FormInput name="quantity" type="number" value={selectedReservation.quantity.toString()} placeholder="Ticket Quantity" isDisabled>
+            Quantity
+          </FormInput>
+        </div>
+      </>
+  }
+</Form>

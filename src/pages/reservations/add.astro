@@ -1,0 +1,42 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import ReservationForm from "@components/Reservations/ReservationFrom.astro"; // Asegúrate de que el path sea correcto
+import { turso } from "src/turso";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const reservationID = formData.get('reservationID');
+  const customerID = formData.get('customerID');
+  const quantity = formData.get('quantity');
+  const paymentMethodID = formData.get('paymentMethodID');
+  const reservationDate = formData.get('reservationDate');
+  const statusID = formData.get('statusID');
+  const total = formData.get('total');
+
+  console.log(reservationID, customerID, quantity, paymentMethodID, reservationDate, statusID, total);
+
+  if (reservationID && customerID && quantity && paymentMethodID && reservationDate && statusID && total) {
+    // Modificar la consulta para pasar todos los valores en un solo string
+    await turso.execute(`
+      INSERT INTO Reservations (reservationID, customerID, quantity, paymentMethodID, reservationDate, statusID, total)
+      VALUES (${reservationID}, ${customerID}, ${quantity}, ${paymentMethodID}, '${reservationDate}', ${statusID}, ${total})
+    `);
+
+    return Astro.redirect('/reservations');
+  } else {
+    console.error("Datos incompletos en el formulario.");
+  }
+}
+---
+<Layout title="Reservation">
+  <ReservationForm>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn/>
+      <SubmitBtn>
+        Add
+      </SubmitBtn>
+    </div>
+  </ReservationForm>
+</Layout>  

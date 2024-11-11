@@ -1,0 +1,34 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import ReservationForm from "@components/Reservations/ReservationFrom.astro"; // Actualiza el nombre si es necesario
+import { turso } from "src/turso";
+import convertReservationDataToJSON  from "@functions/ConvertDataToJSON"
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+
+// Obtener reservationID de los parámetros de la URL
+const { reservationID } = Astro.params;
+
+// Verificar si reservationID está presente
+if (!reservationID) {
+  console.error("reservationID is missing or undefined.");
+  throw new Error("reservationID is missing.");
+}
+
+// Ejecutar la consulta SQL usando reservationID
+const rows = await turso.execute(`SELECT * FROM Reservations WHERE reservationID = '${reservationID}'`);
+
+// Convertir los resultados a formato JSON deseado
+const result = convertReservationDataToJSON(rows.toJSON());
+console.log("Reservation ID:", reservationID); // Verificar el valor
+---
+
+<Layout title="Editar Reserva">
+  <ReservationForm selectedReservation={result[0]} /> <!-- Aquí pasas la reserva seleccionada -->
+  <div class="flex justify-end max-w-full mx-auto px-8">
+    <BackBtn />
+    <SubmitBtn>
+      Update
+    </SubmitBtn>
+  </div>
+</Layout>
