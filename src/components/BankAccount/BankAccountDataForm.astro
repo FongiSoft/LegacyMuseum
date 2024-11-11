@@ -1,0 +1,99 @@
+---
+import FormInput from "@components/ui/Forms/FormInput.astro"; 
+import FormSelect from "@components/ui/Forms/FormSelect.astro"; 
+---
+
+<form class="max-w-full mx-auto p-8">
+  <h2 class="text-2xl dark:text-white font-bold mb-6">Card Data</h2>
+
+  <!-- Campo de Número de tarjeta -->
+  <FormInput name="cardNumber" type="number" placeholder="1234567890123456789012" isDisabled>
+    Card Number
+  </FormInput>
+
+  <!-- Campo de Email -->
+  <FormInput name="email" type="email" isRequired placeholder="johndoe@mail.com">
+    Email
+  </FormInput>
+
+  <h3 class="text-xl dark:text-white font-semibold mb-4">Back Account</h3>
+
+  <!-- Grupo de campos relacionados con la cuenta bancaria -->
+  <div class="flex flex-wrap gap-4">
+    <!-- Número de cuenta -->
+    <FormInput name="accountNumber" type="number" placeholder="1234567890123456789012">
+      Account Number
+    </FormInput>
+
+    <!-- Selección de tipo de cuenta -->
+    <FormSelect name="accountType" title="Type" isDisabled>
+      <option value="">Selecciona un tipo de cuenta</option>
+      <option value="corriente" selected>Corriente</option>
+      <option value="ahorro">Ahorro</option>
+      <option value="nomina">Nómina</option>
+      <option value="inversion">Inversión</option>
+      <option value="joven">Joven</option>
+      <option value="pensiones">Pensiones</option>
+    </FormSelect>
+    
+    <!-- Selección de divisa -->
+    <FormSelect title="Currency" name="currency" isDisabled>
+      <option value="">Selecciona una divisa</option>
+      <option value="usd">Dólar Estadounidense (USD)</option>
+      <option value="eur">Euro (EUR)</option>
+      <option value="mxn" selected>Peso Mexicano (MXN)</option>
+      <option value="gbp">Libra Esterlina (GBP)</option>
+      <option value="jpy">Yen Japonés (JPY)</option>
+      <option value="cad">Dólar Canadiense (CAD)</option>
+      <option value="chf">Franco Suizo (CHF)</option>
+      <option value="cny">Yuan Chino (CNY)</option>
+    </FormSelect>
+
+    <!-- Código BIC -->
+    <FormInput name="bicCode" type="text" isDisabled placeholder="1234567890123456789012">
+      Código BIC
+    </FormInput>
+  </div>
+
+  <h3 class="text-xl dark:text-white font-semibold mb-4">Owner Information</h3>
+
+  <!-- Grupo de campos relacionados con la información del dueño -->
+  <div class="flex flex-wrap gap-4">
+    <!-- Nombre del dueño -->
+    <FormInput name="ownerName" type="text" isDisabled placeholder="John">
+      Name
+    </FormInput>
+    
+    <!-- Apellido paterno -->
+    <FormInput name="ownerPtrlSurname" type="text" isDisabled placeholder="Doe">
+      Paternal surname
+    </FormInput>
+    
+    <!-- Apellido materno -->
+    <FormInput name="ownerMtrlSurname" type="text" isDisabled placeholder="Doe">
+      Maternal surname
+    </FormInput>
+
+    <!-- RFC -->
+    <FormInput name="rfc" type="text" isDisabled placeholder="VECJ880326">
+      RFC
+    </FormInput>
+  </div>
+
+  <div class="flex flex-wrap gap-4">
+    <!-- Teléfono -->
+    <FormInput name="phoneNumber" type="tel" isDisabled placeholder="1234567890">
+      Phone Number
+    </FormInput>
+
+    <!-- Dirección -->
+    <FormInput name="address" type="text" isDisabled placeholder="215 E Tasman Dr Po Box 65502 CA 95134 San Jose">
+      Address
+    </FormInput>
+
+    <!-- Fecha de nacimiento -->
+    <FormInput name="birthDate" type="date" isDisabled>
+      Birth Date
+    </FormInput>
+  </div>
+</form>

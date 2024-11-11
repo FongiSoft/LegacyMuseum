@@ -1,0 +1,24 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import BankAccountForm from "@components/BankAccount/BankAccountForm.astro";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+import { turso } from "src/turso";
+import convertBankAccountDataToJSON from "@functions/ConvertBADataToJSON";
+
+const { bankAccountID } = Astro.params;
+const rows = await turso.execute(`SELECT * FROM BankAccounts WHERE bankAccountID =  ${bankAccountID}`);
+
+// Convertir a formato JSON deseado
+const result = convertBankAccountDataToJSON(rows.toJSON());
+---
+<Layout title="Editar">
+  <BankAccountForm selectedAccount={result[0]}>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+      <SubmitBtn>
+        Update
+      </SubmitBtn>
+    </div>
+  </BankAccountForm>
+</Layout>

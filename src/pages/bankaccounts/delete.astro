@@ -1,0 +1,9 @@
+---
+import { turso } from "src/turso";
+
+const bankAccountID = Astro.url.searchParams.get("bankAccountID");
+
+await turso.execute(`DELETE FROM BankAccounts WHERE bankAccountID = $(bankAccountID)`);
+
+return Astro.redirect('/bankaccounts')
+---

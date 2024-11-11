@@ -1,0 +1,159 @@
+---
+import Form from "@components/ui/Forms/Form.astro";
+import FormInput from "@components/ui/Forms/FormInput.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import type { BankAccountData } from "@customTypes/BankAccountData";
+import CapFrstLetter from "@functions/CapFrstLetter";
+import { generateRandomNumber } from "@functions/generateRandomNumber";
+
+interface Props {
+  selectedAccount?: any;
+}
+
+const { selectedAccount } = Astro.props;
+
+let generatedbankAccountID = "";
+if (!selectedAccount) {
+  generatedbankAccountID = generateRandomNumber(22);
+}
+---
+
+<Form title="Account Data">
+  {selectedAccount ? (
+    <>
+      <FormInput name="accountNumber" type="number" value={selectedAccount.accountNumber} isDisabled placeholder="1234567890123456789012">
+        Account Number
+      </FormInput>
+      <FormInput name="email" type="email" value={selectedAccount.email} placeholder="johndoe@mail.com">
+        Email
+      </FormInput>
+
+      <h3 class="text-xl dark:text-white font-semibold mb-4">Bank Account Details</h3>
+
+      <div class="flex flex-wrap gap-4">
+        <FormSelect name="accountType" title="Type" isDisabled>
+          {selectedAccount.accountType && (
+            <SelectOption value={selectedAccount.accountType} isSelected>
+              {CapFrstLetter(selectedAccount.accountType)}
+            </SelectOption>
+          )}
+        </FormSelect>
+
+        <FormSelect title="Currency" name="currency" isDisabled>
+          {selectedAccount.currency && (
+            <SelectOption value={selectedAccount.currency} isSelected>
+              {selectedAccount.currency}
+            </SelectOption>
+          )}
+        </FormSelect>
+
+        <FormInput name="bicCode" type="text" value={selectedAccount.bicCode} placeholder="1234567890123456789012" isDisabled>
+          Código BIC
+        </FormInput>
+      </div>
+
+      <h3 class="text-xl dark:text-white font-semibold mb-4">Owner Information</h3>
+
+      <div class="flex flex-wrap gap-4">
+        <FormInput name="ownerName" type="text" isDisabled value={selectedAccount.ownerName} placeholder="John">
+          Name
+        </FormInput>
+        
+        <FormInput name="ownerPtrlSurname" type="text" isDisabled value={selectedAccount.paternalSurname} placeholder="Doe">
+          Paternal surname
+        </FormInput>
+        <FormInput name="ownerMtrlSurname" type="text" isDisabled value={selectedAccount.maternalSurname} placeholder="Doe">
+          Maternal surname
+        </FormInput>
+        <FormInput name="rfc" type="text" value={selectedAccount.rfc} isDisabled placeholder="VECJ880326">
+          RFC
+        </FormInput>
+      </div>
+
+      <div class="flex flex-wrap gap-4">
+        <FormInput name="phoneNumber" type="tel" isDisabled value={selectedAccount.phoneNumber} placeholder="1234567890">
+          Phone Number
+        </FormInput>
+
+        <FormInput name="address" type="text" isDisabled value={selectedAccount.address} placeholder="215 E Tasman Dr Po Box 65502 CA 95134 San Jose">
+          Address
+        </FormInput>
+
+        <FormInput name="birthDate" type="date" isDisabled value={selectedAccount.birthDate}>
+          Birth Date
+        </FormInput>
+      </div>
+    </>
+  ) : (
+    <>
+      <FormInput name="accountNumber" type="number" value={generatedbankAccountID} placeholder={generatedbankAccountID} isRequired>
+        Account Number
+      </FormInput>
+      <FormInput name="email" type="email" isRequired placeholder="johndoe@mail.com">
+        Email
+      </FormInput>
+
+      <h3 class="text-xl dark:text-white font-semibold mb-4">Bank Account Details</h3>
+
+      <div class="flex flex-wrap gap-4">
+        <FormSelect name="accountType" title="Type">
+          <SelectOption value="corriente">Corriente</SelectOption>
+          <SelectOption value="ahorro">Ahorro</SelectOption>
+          <SelectOption value="nomina">Nómina</SelectOption>
+          <SelectOption value="inversion">Inversión</SelectOption>
+          <SelectOption value="joven">Joven</SelectOption>
+          <SelectOption value="pensiones">Pensiones</SelectOption>
+        </FormSelect>
+
+        <FormSelect title="Currency" name="currency">
+          <SelectOption value="usd">Dólar Estadounidense (USD)</SelectOption>
+          <SelectOption value="eur">Euro (EUR)</SelectOption>
+          <SelectOption value="mxn">Peso Mexicano (MXN)</SelectOption>
+          <SelectOption value="gbp">Libra Esterlina (GBP)</SelectOption>
+          <SelectOption value="jpy">Yen Japonés (JPY)</SelectOption>
+          <SelectOption value="cad">Dólar Canadiense (CAD)</SelectOption>
+          <SelectOption value="chf">Franco Suizo (CHF)</SelectOption>
+          <SelectOption value="cny">Yuan Chino (CNY)</SelectOption>
+        </FormSelect>
+
+        <FormInput name="bicCode" type="text" placeholder="1234567890123456789012">
+          Código BIC
+        </FormInput>
+      </div>
+
+      <h3 class="text-xl dark:text-white font-semibold mb-4">Owner Information</h3>
+
+      <div class="flex flex-wrap gap-4">
+        <FormInput name="ownerName" type="text" placeholder="John">
+          Name
+        </FormInput>
+        
+        <FormInput name="ownerPtrlSurname" type="text" placeholder="Doe">
+          Paternal surname
+        </FormInput>
+        <FormInput name="ownerMtrlSurname" type="text" placeholder="Doe">
+          Maternal surname
+        </FormInput>
+        <FormInput name="rfc" type="text" placeholder="VECJ880326">
+          RFC
+        </FormInput>
+      </div>
+
+      <div class="flex flex-wrap gap-4">
+        <FormInput name="phoneNumber" type="tel" placeholder="1234567890">
+          Phone Number
+        </FormInput>
+
+        <FormInput name="address" type="text" placeholder="215 E Tasman Dr Po Box 65502 CA 95134 San Jose">
+          Address
+        </FormInput>
+
+        <FormInput name="birthDate" type="date">
+          Birth Date
+        </FormInput>
+      </div>
+    </>
+  )}
+  <slot />
+</Form>
