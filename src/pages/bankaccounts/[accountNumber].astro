@@ -1,4 +1,4 @@
---- 
+---
 import BackBtn from "@components/ui/Buttons/BackBtn.astro";
 import Layout from "../../layouts/Layout.astro";
 import BankAccountForm from "@components/BankAccount/BankAccountForm.astro";
@@ -9,32 +9,66 @@ import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
 // Obtener el bankAccountID de los parámetros de la URL
 const { bankAccountID } = Astro.params;
 
-// Consultar la información de la cuenta bancaria y su relación con las demás tablas
-const rows = await turso.execute(`
-  SELECT ba.bankAccountID, ba.bankID, ba.entityID, ba.entityType, ba.currencyID, ba.accountTypeID, ba.statusID, ba.bicCode, 
-         b.bankName, b.bankCode, b.phoneNumb, b.email, 
-         c.currencyName, c.exchangeRate, c.description AS currencyDescription,
-         at.accountTypeName,
-         s.statusDescription
-  FROM BankAccounts ba
-  LEFT JOIN Banks b ON ba.bankID = b.bankID
-  LEFT JOIN Currencies c ON ba.currencyID = c.currencyID
-  LEFT JOIN AccountTypes at ON ba.accountTypeID = at.accountTypeID
-  LEFT JOIN Status s ON ba.statusID = s.statusID
-  WHERE ba.bankAccountID = ${bankAccountID}
+// Consultar la información de la cuenta bancaria y sus relaciones
+const rows  = await turso.execute(`
+  SELECT 
+      ba.bankAccountID, 
+      ba.bankID, 
+      ba.entityID, 
+      ba.entityType, 
+      ba.currencyID, 
+      ba.accountTypeID, 
+      ba.statusID, 
+      ba.bicCode, 
+      ba.customerID,
+      b.bankName,
+      c.currencyName,
+      at AS AccountTypes,
+      s.statusDescription
+  FROM BankAccounts AS ba
+  LEFT JOIN Banks AS b ON ba.bankID = b.bankID
+  LEFT JOIN Currencies AS c ON ba.currencyID = c.currencyID
+  LEFT JOIN AccountTypes AS at ON ba.accountTypeID = at.accountTypeID
+  LEFT JOIN Status AS s ON ba.statusID = s.statusID
+  WHERE ba.bankAccountID = ${bankAccountID};
 `);
 
 // Convertir los resultados a formato JSON
 const result = convertBankAccountDataToJSON(rows.toJSON());
+
+// Si el formulario es enviado (POST), actualizar los datos
+if (Astro.request.method === "POST") {
+  // Parsear los datos del formulario
+  const formData = await Astro.request.formData();
+
+  const accountNumber = formData.get("accountNumber");
+  const accountTypeID = formData.get("accountTypeID"); 
+  const currencyID = formData.get("currencyID"); 
+  const statusID = formData.get("statusID"); 
+  const bicCode = formData.get("bicCode");
+
+  // Actualizar la base de datos con los nuevos valores
+  await turso.execute(`
+    UPDATE BankAccounts 
+    SET 
+      accountNumber = '${accountNumber}',
+      accountTypeID = ${accountTypeID},
+      currencyID = ${currencyID},
+      statusID = ${statusID},
+      bicCode = '${bicCode}'
+    WHERE bankAccountID = ${bankAccountID};
+  `);
+
+  // Redirigir después de actualizar
+  return Astro.redirect(`/bankaccount/${bankAccountID}`);
+}
 ---
 
 <Layout title="Editar Cuenta Bancaria">
-  <BankAccountForm selectedAccount={result[0]}>
+  <BankAccountForm selectedBankAccount={result[0]}>
     <div class="flex justify-end max-w-full mx-auto px-8">
       <BackBtn />
-      <SubmitBtn>
-        Actualizar
-      </SubmitBtn>
+      <SubmitBtn>Actualizar</SubmitBtn>
     </div>
   </BankAccountForm>
 </Layout>

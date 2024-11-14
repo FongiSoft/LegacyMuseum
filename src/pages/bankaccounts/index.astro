@@ -5,21 +5,16 @@ import EditIcon from "../../components/ui/icons/EditIcon.astro";
 import EditRecord from "../../components/ui/Tables/EditRecord.astro";
 import ItemStatus from "../../components/ui/Tables/ItemStatus.astro";
 import AddRegisterBtn from "../../components/ui/Buttons/AddRegisterBtn.astro";
+import { convertBankAccountDataToJSON } from "@functions/ConvertBankAccountDataToJSON";
 import { turso } from "src/turso";
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
 
-const rows = await turso.execute(`
-  SELECT 
-    ba.bankAccountID, ba.bankID, ba.entityID, ba.entityType, ba.currencyID, 
-    ba.accountTypeID, ba.customerID, ba.statusID, ba.bicCode,
-    b.bankName, c.currencyName, at.accountTypeName, s.statusName
-  FROM BankAccounts ba
-  JOIN Banks b ON ba.bankID = b.bankID
-  JOIN Currencies c ON ba.currencyID = c.currencyID
-  JOIN AccountTypes at ON ba.accountTypeID = at.accountTypeID
-  JOIN Status s ON ba.statusID = s.statusID
-`);
+// Ejecuta una consulta SQL para obtener todas las cuentas bancarias
+const rows = await turso.execute('SELECT * FROM BankAccounts');
 
-const data = rows.toJSON(); // Convertir a formato JSON
+// Convierte los datos en formato JSON para su uso en la tabla
+const data = rows.toJSON();
+const result = convertBankAccountDataToJSON(data); // Convierte a formato JSON deseado
 ---
 
 <Layout title="Bank Accounts">
@@ -38,33 +33,30 @@ const data = rows.toJSON(); // Convertir a formato JSON
       <table class="w-full table-auto text-sm text-left">
         <thead class="dark:bg-gray-400/20 dark:text-white bg-gray-50 text-gray-600 font-medium border-b">
           <tr>
-            <th class="py-3 px-6">Bank Name</th>
-            <th class="py-3 px-6">Account Type</th>
-            <th class="py-3 px-6">Currency</th>
-            <th class="py-3 px-6">Entity Type</th>
-            <th class="py-3 px-6">BIC Code</th>
+            <th class="py-3 px-6">Account Number</th>
+            <th class="py-3 px-6">Owner Name</th>
+            <th class="py-3 px-6">Currency</th> <!-- Cambiado a currency -->
             <th class="py-3 px-6">Status</th>
             <th class="py-3 px-6"></th>
           </tr>
         </thead>
         <tbody class="text-gray-600 divide-y">
           {
-            data.map((item) => (
+            result.map((item) => (
               <tr>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.bankName}</td>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.accountTypeName}</td>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.currencyName}</td>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white capitalize">{item.entityType}</td>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.bicCode}</td>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.bankAccountID}</td> <!-- Cambiado a bankAccountID -->
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.customerFullName}</td> <!-- Cambiado a customerFullName -->
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.currency}</td> <!-- Cambiado a currency -->
                 <td class="px-6 py-4 whitespace-nowrap dark:text-white capitalize">
-                  <ItemStatus status={item.statusName} />
+                  <ItemStatus status={item.status} />
                 </td>
                 <td class="flex items-center justify-center gap-4 m-2 text-right px-6 whitespace-nowrap">
-                  <EditRecord href={`/bankaccounts/edit/${item.bankAccountID}`}>
+                  <EditRecord href={`/bankaccounts/${item.bankAccountID}`}>
                     <EditIcon/>
                   </EditRecord>
+
                   <a
-                    href={`/bankaccounts/delete?bankAccountID=${item.bankAccountID}`}
+                    href={`/bankaccounts/delete?bankAccountID=${item.bankAccountID}`} 
                     class="py-2 px-3 inline-block text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700 md:text-sm"
                   >
                     <TrashIcon/>

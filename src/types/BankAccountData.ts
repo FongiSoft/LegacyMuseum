@@ -1,63 +1,25 @@
-// Tipo base para los datos de la cuenta bancaria
+// Definición del tipo de datos para BankAccounts basado en la estructura de la tabla
 export type BankAccountData = {
-  bankAccountID: number;        // Identificador de la cuenta bancaria
-  bankID: number;               // ID del banco
-  entityID: number;             // ID de la entidad asociada (cliente, proveedor, empleado)
+  bankAccountID: number;      // Identificador único para la cuenta bancaria
+  bankID: number;             // Identificador del banco (FK a Banks)
+  entityID: number;           // ID de la entidad asociada (cliente, proveedor, empleado)
   entityType: 'customer' | 'supplier' | 'employee';  // Tipo de entidad
-  currencyID: number;           // ID de la moneda
-  accountTypeID: number;        // ID del tipo de cuenta
-  customerID: number;           // ID del cliente
-  statusID: number;             // Estado de la cuenta (ID de la tabla Status)
-  bicCode: string | null;       // Código BIC/SWIFT del banco (opcional)
+  currencyID: number;         // Identificador de la divisa (FK a Currencies)
+  accountTypeID: number;      // Tipo de cuenta (FK a AccountTypes)
+  customerID: number;         // ID del cliente (FK a Customers)
+  statusID: number;           // Estado de la cuenta (FK a Status)
+  bicCode: string | null;     // Código BIC/SWIFT del banco
 };
 
-// Interfaz para los datos convertidos y listos para ser presentados en la pantalla
+// Interfaz para los datos convertidos que facilitarán el manejo y presentación de datos en el frontend
 export interface ConvertedBankAccountData {
   bankAccountID: number;
-  bankName: string;             // Nombre del banco
+  bankName: string;           // Nombre del banco (relación con Banks)
   entityID: number;
-  entityType: 'customer' | 'supplier' | 'employee'; // Tipo de entidad
-  currency: string;             // Nombre de la moneda
-  accountType: string;          // Nombre del tipo de cuenta
-  customerID: number;
-  status: string;               // Descripción del estado de la cuenta
+  entityType: string;
+  currency: string | null;    // Nombre de la divisa
+  accountType: string;        // Tipo de cuenta (Ahorro, Cheques, etc.)
+  customerFullName: string;   // Nombre completo del cliente
+  status: string;             // Estado de la cuenta (Activa, Inactiva, etc.)
   bicCode: string | null;
 }
-
-// Función para convertir los datos crudos (BankAccountData) a datos legibles (ConvertedBankAccountData)
-export function convertBankAccountData(
-  bankAccount: BankAccountData,
-  bankName: string,
-  currencyName: string,
-  accountTypeName: string,
-  statusDescription: string
-): ConvertedBankAccountData {
-  return {
-    bankAccountID: bankAccount.bankAccountID,
-    bankName: bankName,
-    entityID: bankAccount.entityID,
-    entityType: bankAccount.entityType,
-    currency: currencyName,
-    accountType: accountTypeName,
-    customerID: bankAccount.customerID,
-    status: statusDescription,
-    bicCode: bankAccount.bicCode,
-  };
-}
-
-export type BankData = {
-  bankID: number;
-  bankName: string;
-  addressID: number;
-  bankCode: string;
-  phoneNumb: string;
-  email: string;
-  statusID: number;
-};
-
-export type CurrencyData = {
-  currencyID: number;
-  currencyName: string;
-  exchangeRate: number;
-  description: string;
-};

@@ -1,6 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import BankAccountForm from "../../components/BankAccount/BankAccountForm.astro";
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
 import { turso } from "src/turso";
 
 if (Astro.request.method === 'POST') {
@@ -14,15 +16,22 @@ if (Astro.request.method === 'POST') {
   const bicCode = formData.get('bicCode');
   const customerID = formData.get('customerID');
 
+  // Ejecutar la inserción de la nueva cuenta bancaria
   await turso.execute(`
     INSERT INTO BankAccounts (bankID, entityID, entityType, currencyID, accountTypeID, statusID, bicCode, customerID)
     VALUES (${bankID}, ${entityID}, '${entityType}', ${currencyID}, ${accountTypeID}, ${statusID}, '${bicCode}', ${customerID})
   `);
 
+  // Redireccionar a la lista de cuentas bancarias después de añadir una nueva cuenta
   return Astro.redirect('/bankaccounts');
 }
 ---
 
 <Layout title="Add Bank Account">
-  <BankAccountForm/>
+  <BankAccountForm>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+      <SubmitBtn> Add </SubmitBtn>
+    </div>
+  </BankAccountForm>
 </Layout>
