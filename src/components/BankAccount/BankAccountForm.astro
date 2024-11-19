@@ -1,99 +1,98 @@
 ---
-import Form from "@components/ui/Forms/Form.astro";
-import FormInput from "@components/ui/Forms/FormInput.astro";
-import FormSelect from "@components/ui/Forms/FormSelect.astro";
-import SelectOption from "@components/ui/Forms/SelectOption.astro";
-import { convertBankAccountDataToJSON } from "@functions/ConvertBankAccountDataToJSON";
-import { turso } from "src/turso";
+  import Form from "@components/ui/Forms/Form.astro";
+  import FormInput from "@components/ui/Forms/FormInput.astro";
+  import FormSelect from "@components/ui/Forms/FormSelect.astro";
+  import SelectOption from "@components/ui/Forms/SelectOption.astro";
+  import { turso } from "src/turso";
 
-interface Props {
-  selectedBankAccount?: any;
-}
 
-const { selectedBankAccount } = Astro.props;
-let bankAccNumbers;
-let result;
 
-// Consultar la base de datos
-bankAccNumbers = await turso.execute("SELECT * FROM BankAccounts");
-const data = bankAccNumbers?.toJSON();
-
-// Convierte los datos obtenidos en el formato esperado
-result = convertBankAccountDataToJSON(data);
----
-
-<Form title="Bank Account Details">
-  {
-    !selectedBankAccount
-    ? <>
-        <FormInput name="bankID" type="number" isRequired placeholder="Bank ID">
-          Bank ID
-        </FormInput>
-
-        <FormInput name="entityID" type="number" isRequired placeholder="Entity ID">
-          Entity ID
-        </FormInput>
-
-        <FormSelect name="entityType" isRequired title="Entity Type">
-          <SelectOption value="">--Select Entity Type--</SelectOption>
-          <SelectOption value="customer">Customer</SelectOption>
-          <SelectOption value="supplier">Supplier</SelectOption>
-          <SelectOption value="employee">Employee</SelectOption>
-        </FormSelect>
-
-        <FormInput name="currencyID" type="number" isRequired placeholder="Currency ID">
-          Currency ID
-        </FormInput>
-
-        <FormInput name="accountTypeID" type="number" isRequired placeholder="Account Type ID">
-          Account Type ID
-        </FormInput>
-
-        <FormInput name="statusID" type="number" isRequired placeholder="Status ID">
-          Status ID
-        </FormInput>
-
-        <FormInput name="bicCode" type="text" placeholder="BIC Code">
-          BIC Code
-        </FormInput>
-
-        <FormInput name="customerID" type="number" isRequired placeholder="Customer ID">
-          Customer ID
-        </FormInput>
-      </>
-    : <>
-        <FormInput name="bankID" type="number" value={selectedBankAccount.bankID} isDisabled placeholder="Bank ID">
-          Bank ID
-        </FormInput>
-
-        <FormInput name="entityID" type="number" value={selectedBankAccount.entityID} isDisabled placeholder="Entity ID">
-          Entity ID
-        </FormInput>
-
-        <FormSelect name="entityType" isDisabled title="Entity Type">
-          <SelectOption value={selectedBankAccount.entityType}>{selectedBankAccount.entityType}</SelectOption>
-        </FormSelect>
-
-        <FormInput name="currencyID" type="number" value={selectedBankAccount.currencyID} isDisabled placeholder="Currency ID">
-          Currency ID
-        </FormInput>
-
-        <FormInput name="accountTypeID" type="number" value={selectedBankAccount.accountTypeID} isDisabled placeholder="Account Type ID">
-          Account Type ID
-        </FormInput>
-
-        <FormInput name="statusID" type="number" value={selectedBankAccount.statusID} isDisabled placeholder="Status ID">
-          Status ID
-        </FormInput>
-
-        <FormInput name="bicCode" type="text" value={selectedBankAccount.bicCode} isDisabled placeholder="BIC Code">
-          BIC Code
-        </FormInput>
-
-        <FormInput name="customerID" type="number" value={selectedBankAccount.customerID} isDisabled placeholder="Customer ID">
-          Customer ID
-        </FormInput>
-      </>
+  interface Props {
+    selectedBankAccount?: any;
   }
-  <slot />
-</Form>
+
+  const { selectedBankAccount } = Astro.props;
+
+
+
+  // Generar un número aleatorio para el bankAccountID
+  const generateRandomBankAccountID = () => {
+    return Math.floor(Math.random() * 1000000); // Genera un valor aleatorio entre 0 y 999999
+  }
+
+  const randomBankAccountID = generateRandomBankAccountID();
+  const bankAccountID = selectedBankAccount?.bankAccountID || randomBankAccountID;
+  ---
+
+  <Form title="Bank Account Details">
+    <FormInput 
+    name="bankAccountID" 
+    type="number" 
+    value={bankAccountID} 
+    placeholder="Bank Account ID" isDisabled
+    isRequired 
+    isDisabled={!!selectedBankAccount}
+  >
+    Bank Account ID
+  </FormInput>
+
+    <FormInput 
+      name="bankID" 
+      type="number" 
+      value={selectedBankAccount?.bankID || ''} 
+      placeholder="Bank ID" isRequired
+    >Bank ID</FormInput>
+
+    <FormInput 
+      name="entityID" 
+      type="number" 
+      value={selectedBankAccount?.entityID || ''} 
+      placeholder="Entity ID" isRequired
+    >Entity ID</FormInput>
+
+    <FormSelect name="entityType" isRequired title="Entity Type">
+      <SelectOption value="">-- Select Entity Type --</SelectOption>
+      <SelectOption value="customer" isSelected={selectedBankAccount?.entityType === 'customer'}>Customer</SelectOption>
+      <SelectOption value="supplier" isSelected={selectedBankAccount?.entityType === 'supplier'}>Supplier</SelectOption>
+      <SelectOption value="employee" isSelected={selectedBankAccount?.entityType === 'employee'}>Employee</SelectOption>
+    </FormSelect>
+
+    <FormInput 
+      name="currencyID" 
+      type="number" 
+        value={selectedBankAccount?.currencyID || ''} 
+        placeholder="Currency ID" isRequired
+      >Currency ID</FormInput>
+
+    <FormInput 
+      name="accountTypeID"  
+      type="number" 
+      value={selectedBankAccount?.accountTypeID || ''} 
+      placeholder="Account Type ID" isRequired
+    >Account Type ID</FormInput>
+
+    <FormInput 
+      name="statusID"  
+      type="number" 
+      value={selectedBankAccount?.statusID || ''} 
+      placeholder="Status ID" isRequired
+    >Status ID</FormInput>
+
+    <FormInput 
+      name="bicCode" 
+      type="text" 
+      value={selectedBankAccount?.bicCode || ''} 
+      placeholder="BIC Code" isRequired
+    >BIC Code</FormInput>
+
+    <FormInput 
+      name="customerID" 
+      type="number" 
+      value={selectedBankAccount?.customerID || ''} 
+      placeholder="Customer ID" isRequired
+    >Customer ID</FormInput>
+
+    <slot />
+  </Form>
+
+

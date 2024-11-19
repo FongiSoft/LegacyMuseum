@@ -7,22 +7,16 @@ interface Props {
 
 const { value, label, isSelected } = Astro.props
 ---
+
 {
   isSelected
-  ?
+  ? (
     <option value={value} selected class="capitalize">
-      {
-        label 
-        ? label
-        : <slot/> 
-      }
+      {label ? label : <slot/>}
     </option>
-  :
+  ) : (
     <option value={value} class="capitalize">
-      {
-        label 
-        ? label
-        : <slot/> 
-      }
+      {label ? label : <slot/>}
     </option>
+  )
 }
