@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="404">
+  <div
+      class="max-w-lg min-h-[720px] flex justify-center mx-auto flex-1 flex-row-reverse gap-12 items-center md:max-w-none md:flex"
+    >
+      <div class="mt-12 flex-1 max-w-lg space-y-3 md:mt-0">
+        <h3 class="text-LegacyBlue-600 font-bold">404 Error</h3>
+        <p class="dark:text-white text-gray-800 text-4xl sm:text-5xl font-bold">
+          Page not found
+        </p>
+        <p class="text-gray-600 dark:text-gray-500">
+          Sorry, the page you are looking for could not be found or has been
+          removed.
+        </p>
+        <a
+          href="/"
+          class="text-LegacyBlue-600 duration-150 hover:text-indigo-400 font-medium inline-flex items-center gap-x-1"
+        >
+          Go back →
+          
+        </a>
+      </div>
+    </div>
+</Layout>
