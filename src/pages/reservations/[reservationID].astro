@@ -1,0 +1,52 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import ReservationForm from "@components/Reservations/ReservationFrom.astro";
+import { turso } from "src/turso";
+import convertReservationDataToJSON from "@functions/ConvertDataToJSON";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+import statusTextToId from "@functions/statusTextTold";
+
+const { reservationID } = Astro.params;
+const rows = await turso.execute(
+  `SELECT * FROM Reservations WHERE reservationID = ${reservationID}`
+);
+
+const result = convertReservationDataToJSON(rows.toJSON());
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+
+  const reservationID = formData.get("reservationID")?.toString() || '';
+  const statusText = formData.get("status")?.toString() || '';
+  const customerID = formData.get("customerID")?.toString() || '';
+  const quantity = formData.get("quantity")?.toString() || '0';
+  const reservationDate = formData.get("reservationDate")?.toString() || '';
+  const total = parseFloat(formData.get("total")?.toString() || '0');
+
+  let statusConvertedID = statusTextToId(statusText);
+  let customerIDNum = parseInt(customerID, 10);
+  let quantityNum = parseInt(quantity, 10);
+
+  await turso.execute(`
+    UPDATE Reservations 
+    SET 
+      customerID = ${customerIDNum}, 
+      statusID = ${statusConvertedID}, 
+      quantity = ${quantityNum},
+      reservationDate = '${reservationDate}',
+      total = ${total}
+    WHERE reservationID = ${reservationID};
+  `);
+
+  return Astro.redirect("/reservations");
+}
+---
+
+<Layout title="Editar Reserva">
+  <ReservationForm selectedReservation={result[0]}>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+    </div>
+  </ReservationForm> <!-- Aquí pasas la reserva seleccionada -->
+</Layout>

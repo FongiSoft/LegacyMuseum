@@ -58,18 +58,18 @@ const { selectedReservation } = Astro.props;
       <FormInput name="reservationID" type="number" value={selectedReservation.reservationID} isDisabled placeholder="123456">
         Reservation ID
       </FormInput>
-      <FormInput name="customerID" type="number" value={selectedReservation.customerID} placeholder="Customer ID" isDisabled>
+      <FormInput name="customerID" type="number" value={selectedReservation.customerID} isDisabled placeholder="Customer ID" >
         Customer ID
       </FormInput>
 
       <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
 
       <div class="flex flex-wrap gap-4">
-        <FormInput name="quantity" type="number" value={selectedReservation.quantity} placeholder="Number of Tickets" isDisabled>
+        <FormInput name="quantity" type="number" value={selectedReservation.quantity} isDisabled placeholder="Number of Tickets" >
           Quantity
         </FormInput>
 
-        <FormSelect name="paymentMethodID" title="Payment Method" isDisabled>
+        <FormSelect name="paymentMethodID" title="Payment Method" isDisabled >
           {selectedReservation.paymentMethodID && (
             <SelectOption value={selectedReservation.paymentMethodID} isSelected>
               {selectedReservation.paymentMethodID === 1 ? "Credit Card" : 
@@ -80,7 +80,7 @@ const { selectedReservation } = Astro.props;
           )}
         </FormSelect>
 
-        <FormInput name="reservationDate" type="date" value={selectedReservation.reservationDate} isDisabled>
+        <FormInput name="reservationDate" type="date" value={selectedReservation.reservationDate} isDisabled >
           Reservation Date
         </FormInput>
 
@@ -94,9 +94,10 @@ const { selectedReservation } = Astro.props;
           )}
         </FormSelect>
 
-        <FormInput name="total" type="number" step="0.01" value={selectedReservation.total} placeholder="Total Amount" isDisabled>
+        <FormInput name="total" type="number" step="0.01" value={selectedReservation.total} placeholder="Total Amount" isDisabled >
           Total
         </FormInput>
       </div>
+      <slot/>
   }
 </Form>
