@@ -1,25 +1,27 @@
 // BankAccountData.ts
-export type BankAccountData = {
+export interface BankAccount {
   bankAccountID: number;
   bankID: number;
   entityID: number;
-  entityType: string;
+  entityType: "customer" | "supplier" | "employee";
   currencyID: number;
   accountTypeID: number;
-  customerID: number;
   statusID: number;
   bicCode: string;
-};
+  customerID: number;
+  status: number;           // Nombre del estado
+}
   
 export type ConvertedBankAccountData = {
   bankAccountID: number;
   bankID: number;
   entityID: number;
   entityType: string;
-  currency: string | null;
-  accountType: string;
-  customerFullName: string;
-  status: string;
+  currencyID: number;
+  accountTypeID: number;
+  statusID: number;
   bicCode: string | null;
+  customerID: number;
+  status: string;
 };
 

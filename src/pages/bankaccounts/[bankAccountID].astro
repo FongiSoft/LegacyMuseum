@@ -5,75 +5,57 @@ import BankAccountForm from "@components/BankAccount/BankAccountForm.astro";
 import { turso } from "src/turso";
 import { convertBankAccountDataToJSON } from "@functions/ConvertBankAccountDataToJSON";
 import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
-import bankStatusTextToId from "@functions/bankStatusTextToId";
-
+import bankStatusTextToId from "@functions/statusTextToId";
 const { bankAccountID } = Astro.params;
 
 if (!bankAccountID) {
   throw new Error("Error: 'bankAccountID' no está definido en la ruta.");
 }
 
-// Consultar la información de la cuenta bancaria sin relaciones adicionales
-const rows = await turso.execute(
-  `SELECT 
-    ba.bankAccountID, 
-    ba.bankID, 
-    ba.entityID, 
-    ba.entityType, 
-    ba.currencyID, 
-    ba.accountTypeID, 
-    ba.statusID, 
-    ba.bicCode, 
-    ba.customerID,
-    b.bankName,
-    c.currencyName,
-    at.accountType AS accountTypeName,  
-    s.statusName AS statusDescription  
-  FROM BankAccounts AS ba
-  LEFT JOIN Banks AS b ON ba.bankID = b.bankID
-  LEFT JOIN Currencies AS c ON ba.currencyID = c.currencyID
-  LEFT JOIN AccountTypes AS at ON ba.accountTypeID = at.accountTypeID
-  LEFT JOIN Status AS s ON ba.statusID = s.statusID
-  WHERE ba.bankAccountID = ${bankAccountID};`
-);
-
-
-// Convertir los resultados a formato JSON
+// Obtener los datos de la cuenta bancaria desde la base de datos
+const rows = await turso.execute(`SELECT * FROM BankAccounts WHERE bankAccountID = ${bankAccountID}`);
 const result = convertBankAccountDataToJSON(rows.toJSON());
+
 
 if (Astro.request.method === "POST") {
   // Parsear los datos del formulario
   const formData = await Astro.request.formData();
 
-  const bankID = parseInt(formData.get("bankID")?.toString() || '0', 10);
-  const accountTypeID = parseInt(formData.get("accountTypeID")?.toString() || '0', 10);
-  const currencyID = parseInt(formData.get("currencyID")?.toString() || '0', 10);
-  const statusText = formData.get("statusID")?.toString() || '';
-  const statusID = bankStatusTextToId(statusText); // Convertir texto a ID
-  const bicCode = formData.get("bicCode")?.toString() || '';
+  const bankAccountID = formData.get("bankAccountID");
+  const bankID = formData.get("bankID");
+  const entityID = formData.get("entityID");
+  const entityType = formData.get("entityType");
+  const currencyID = formData.get("currencyID");
+  const accountTypeID = formData.get("accountTypeID");
+  const customerID = formData.get("customerID");
+  const statusID = formData.get("statusID");
+  const bicCode = formData.get("bicCode");
 
-  // Actualizar la base de datos con los nuevos valores
+  // Actualizar la información de la cuenta bancaria
   await turso.execute(`
     UPDATE BankAccounts 
-    SET
-      bankID = ${bankID}, 
-      accountTypeID = ${accountTypeID},
+    SET 
+      bankID = ${bankID},
+      entityID = ${entityID},
+      entityType = '${entityType}',
       currencyID = ${currencyID},
+      accountTypeID = ${accountTypeID},
+      customerID = ${customerID},
       statusID = ${statusID},
       bicCode = '${bicCode}'
-    WHERE bankAccountID = ${bankAccountID}
+    WHERE bankAccountID = ${bankAccountID};
   `);
-
+  
   // Redirigir después de actualizar
-  return Astro.redirect(`/bankaccount/${bankAccountID}`);
+  return Astro.redirect(`/bankaccounts`);
 }
 ---
 
-<Layout title="Editar Cuenta Bancaria">
+<Layout title="Editar">
   <BankAccountForm selectedBankAccount={result[0]}>
     <div class="flex justify-end max-w-full mx-auto px-8">
       <BackBtn />
-      <SubmitBtn>Actualizar</SubmitBtn>
+      <SubmitBtn>UPDATE</SubmitBtn>
     </div>
   </BankAccountForm>
 </Layout>

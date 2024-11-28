@@ -13,25 +13,16 @@
 
   const { selectedBankAccount } = Astro.props;
 
-
-
-  // Generar un número aleatorio para el bankAccountID
-  const generateRandomBankAccountID = () => {
-    return Math.floor(Math.random() * 1000000); // Genera un valor aleatorio entre 0 y 999999
-  }
-
-  const randomBankAccountID = generateRandomBankAccountID();
-  const bankAccountID = selectedBankAccount?.bankAccountID || randomBankAccountID;
   ---
 
   <Form title="Bank Account Details">
     <FormInput 
     name="bankAccountID" 
     type="number" 
-    value={bankAccountID} 
-    placeholder="Bank Account ID" isDisabled
-    isRequired 
-    isDisabled={!!selectedBankAccount}
+    value={selectedBankAccount?.bankAccountID || ''} 
+    placeholder="Bank Account ID" 
+
+ 
   >
     Bank Account ID
   </FormInput>
@@ -94,5 +85,3 @@
 
     <slot />
   </Form>
-
-

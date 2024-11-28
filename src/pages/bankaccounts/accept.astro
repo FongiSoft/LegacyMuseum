@@ -3,7 +3,7 @@ import { turso } from "src/turso";
 
 const bankAccountID = Astro.url.searchParams.get("bankAccountID");
 
-await turso.execute(`UPDATE BankAccounts SET statusID = 6 WHERE bankAccountID = ${bankAccountID}`);
+await turso.execute(`UPDATE BankAccounts SET statusID = 17 WHERE bankAccountID = ${bankAccountID}`);
 
 return Astro.redirect('/bankaccounts')
 ---

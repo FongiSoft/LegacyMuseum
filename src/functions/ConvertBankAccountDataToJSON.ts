@@ -8,11 +8,12 @@ export function convertBankAccountDataToJSON(data: DBData): ConvertedBankAccount
       bankID: Number(row[1]), 
       entityID: Number(row[2]), 
       entityType: row[3] as string, 
-      currency: row[4] ? String(row[4]) : null, 
-      accountType: row[5] as string, // Tipo de cuenta
-      customerFullName: `${row[6] ?? ''} ${row[7] ?? ''} ${row[8] ?? ''}`.trim(), // Concatenación del nombre del cliente
-      status: String(row[9]).toLowerCase(), 
-      bicCode: row[10] ? (row[10] as string) : null, // El código BIC
+      currencyID: Number(row[4]), 
+      accountTypeID: Number(row[5]),
+      statusID: Number(row[7]), 
+      bicCode: row[8] ? (row[8] as string) : null,
+      customerID: Number(row[6]),
+      status: String(row[9])
     };
   });
 }

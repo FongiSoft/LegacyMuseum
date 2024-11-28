@@ -7,14 +7,22 @@ import ItemStatus from "../../components/ui/Tables/ItemStatus.astro";
 import AddRegisterBtn from "../../components/ui/Buttons/AddRegisterBtn.astro";
 import { convertBankAccountDataToJSON } from "@functions/ConvertBankAccountDataToJSON";
 import { turso } from "src/turso";
+import CheckIcon from "../../components/ui/icons/CheckIcon.astro";
 import BackBtn from "@components/ui/Buttons/BackBtn.astro";
 
 // Ejecuta una consulta SQL para obtener todas las cuentas bancarias
-const rows = await turso.execute('SELECT * FROM BankAccounts');
+const rows = await turso.execute(`
+  SELECT ba.*, s.statusName 
+  FROM BankAccounts AS ba
+  JOIN Status AS s ON ba.statusID = s.statusID
+`);
 
 // Convierte los datos en formato JSON para su uso en la tabla
 const data = rows.toJSON();
 const result = convertBankAccountDataToJSON(data); // Convierte a formato JSON deseado
+
+console.log(result)
+
 ---
 
 <Layout title="Bank Accounts">
@@ -34,8 +42,9 @@ const result = convertBankAccountDataToJSON(data); // Convierte a formato JSON d
         <thead class="dark:bg-gray-400/20 dark:text-white bg-gray-50 text-gray-600 font-medium border-b">
           <tr>
             <th class="py-3 px-6">Account Number</th>
-            <th class="py-3 px-6">Owner Name</th>
-            <th class="py-3 px-6">Currency</th> <!-- Cambiado a currency -->
+            <th class="py-3 px-6">Customer ID</th>
+            <th class="py-3 px-6">Currency ID</th>
+            <th class="py-3 px-6">Status</th>
             <th class="py-3 px-6"></th>
           </tr>
         </thead>
@@ -43,28 +52,42 @@ const result = convertBankAccountDataToJSON(data); // Convierte a formato JSON d
           {
             result.map((item) => (
               <tr>
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.bankAccountID}</td> <!-- Cambiado a bankAccountID -->
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.customerFullName}</td> <!-- Cambiado a customerFullName -->
-                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.currency}</td> <!-- Cambiado a currency -->
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.bankAccountID}</td> 
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.customerID}</td> 
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.currencyID}</td>
                 <td class="px-6 py-4 whitespace-nowrap dark:text-white capitalize">
-                  <ItemStatus status={item.status} />
+                  <span class={`px-2 py-1 rounded-full text-sm ${
+                  item.status === 'Activa' ? 'bg-green-100 text-green-800' :
+                  item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }`}>
+                  {item.status}
+                </span>
                 </td>
                 <td class="flex items-center justify-center gap-4 m-2 text-right px-6 whitespace-nowrap">
                   <EditRecord href={`/bankaccounts/${item.bankAccountID}`}>
                     <EditIcon/>
                   </EditRecord>
-
+        
                   <a
                     href={`/bankaccounts/delete?bankAccountID=${item.bankAccountID}`} 
                     class="py-2 px-3 inline-block text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700 md:text-sm"
                   >
                     <TrashIcon/>
                   </a>
+                  <a
+                    href={`/bankaccounts/accept?bankAccountID=${item.bankAccountID}`}
+                    class="py-2 px-3 inline-block text-white duration-150 font-medium bg-green-600 rounded-lg hover:bg-green-500 active:bg-green-700 md:text-sm"
+                  >
+                    <CheckIcon/>
+                  </a>
                 </td>
               </tr>
             ))
           }
         </tbody>
+        
+        
       </table>
     </div>
   </div>
