@@ -1,43 +1,41 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { turso } from '../../turso';
+import { turso } from "../../turso";
 
-const currentDate = new Date().toISOString().split('T')[0];
+const currentDate = new Date().toISOString().split("T")[0];
 
-if (Astro.request.method === 'POST') {
+if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
-  const exhibition = formData.get('exhibition');
-  const ticketType = formData.get('ticketType');
-  const quantity = formData.get('quantity');
-  const paymentMethod = formData.get('paymentMethod'); // Nuevo campo para el método de pago
+  const passTypeID = formData.get("ticketType"); // Mapping to passTypeID
+  const quantity = formData.get("quantity");
+  const paymentMethodID = formData.get("paymentMethod"); // Now referencing paymentMethodID
+  const statusID = 1; // Assuming 1 for 'Active' status
 
-  // Guardamos el ticket en la base de datos
+  // Insert data into the Passes table
   await turso.execute(`
-    INSERT INTO Tickets (exhibition, ticketType, quantity, date) 
-    VALUES ('${exhibition}', ${ticketType}, ${quantity}, '${currentDate}')
+    INSERT INTO Passes (passTypeID, quantity, paymentMethodID, statusID)
+    VALUES (${passTypeID}, ${quantity}, ${paymentMethodID}, ${statusID})
   `);
 
-  // Redirigir según el método de pago
-  if (paymentMethod === 'card') {
-    return Astro.redirect('/tickets/payment-card');
+  // Redirect based on payment method
+  if (paymentMethodID === "1") {
+    // Assuming '1' corresponds to card
+    return Astro.redirect("/tickets/payment-card");
   } else {
-    return Astro.redirect('/tickets/payment-cash');
+    // Otherwise, cash
+    return Astro.redirect("/tickets/payment-cash");
   }
 }
 ---
 
 <Layout title="Add Ticket">
   <div class="max-w-6xl mx-auto mt-12 p-8 bg-gray-800 rounded-lg shadow-md">
-    <h1 class="text-3xl font-semibold text-white mb-6">Add New Ticket</h1>
+    <h1 class="text-3xl font-semibold text-white mb-6">Add New Pass</h1>
     
     <form class="grid grid-cols-2 gap-6" method="POST">
-      <!-- Campos del ticket -->
+      <!-- Campos del pass -->
       <div>
-        <label class="block text-sm font-medium text-white">Exhibition</label>
-        <input type="text" name="exhibition" class="mt-1 block w-full px-3 py-2 bg-gray-700 text-white rounded-md" placeholder="Exhibition" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-white">Ticket Type</label>
+        <label class="block text-sm font-medium text-white">Pass Type</label>
         <select name="ticketType" class="mt-1 block w-full px-3 py-2 bg-gray-700 text-white rounded-md">
           <option value="1">Time Traveler (Basic)</option>
           <option value="2">Legacy Explorer (VIP)</option>
@@ -52,8 +50,8 @@ if (Astro.request.method === 'POST') {
       <div class="col-span-2">
         <label class="block text-sm font-medium text-white">Payment Method</label>
         <select name="paymentMethod" class="mt-1 block w-full px-3 py-2 bg-gray-700 text-white rounded-md">
-          <option value="card">Card</option>
-          <option value="cash">Cash</option>
+          <option value="1">Card</option>
+          <option value="2">Cash</option>
         </select>
       </div>
 

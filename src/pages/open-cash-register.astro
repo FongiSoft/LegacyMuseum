@@ -1,130 +1,84 @@
 ---
 import Layout from '../layouts/Layout.astro';
----
 
+const response = await fetch('http://localhost:3000/api/cash-registers');
+const cashRegisters = await response.json();
+const title = "Open Cash Register";
+---
 <style>
   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
     background-color: #f7f7f7;
-    box-sizing: border-box;
   }
 
   .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-
-  .form-box {
+    max-width: 600px;
+    margin: 50px auto;
     background-color: #fff;
-    padding: 2rem;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   h1 {
-    color: #333;
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
   }
 
-  .form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-  }
-
-  label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-  }
-
-  input[type="text"],
-  input[type="password"] {
+  select {
     width: 100%;
-    padding: 0.75rem;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 10px 20px;
     font-size: 1rem;
-    box-sizing: border-box;
-  }
-
-  .btn-group {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .btn {
+    color: #fff;
     background-color: #007bff;
-    color: white;
-    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
     cursor: pointer;
-    width: 45%;
   }
 
-  .btn:hover {
+  button:hover {
     background-color: #0056b3;
-  }
-
-  .btn-secondary {
-    background-color: #6c757d;
-  }
-
-  .btn-secondary:hover {
-    background-color: #5a6268;
-  }
-
-  .header-right {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-
-  .header-right input[type="date"] {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
   }
 </style>
 
-<Layout title="Abrir Caja">
+<Layout title={title}>
   <div class="container">
-    <h1 class="text-blue-500">The Legacy Museum</h1>
+    <h1>{title}</h1>
 
-    <div class="header-right">
-      <label for="date">Fecha</label>
-      <input type="date" id="date" />
-    </div>
+    <select id="cash-register-select">
+      <option value="">Select a Cash Register</option>
+      {cashRegisters.map((register) => (
+        <option value={register.cashRegisterID}>
+          {register.cashRegisterName} - {register.description}
+        </option>
+      ))}
+    </select>
 
-    <div class="form-box">
-      <h1>Abrir Caja</h1>
-
-      <div class="form-group">
-        <label for="user">Usuario</label>
-        <input type="text" id="user" placeholder="Int(10)" />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" placeholder="S(20)" />
-      </div>
-
-      <div class="btn-group">
-        <button class="btn">Aceptar</button>
-        <button class="btn btn-secondary">Cancelar</button>
-      </div>
-    </div>
+    <button id="open-register">Open</button>
   </div>
+
+  <script>
+    const selectElement = document.getElementById('cash-register-select');
+    const openButton = document.getElementById('open-register');
+
+    openButton.addEventListener('click', () => {
+      const selectedValue = selectElement.value;
+      if (selectedValue) {
+        alert(`Opening Cash Register ID: ${selectedValue}`);
+        // Add logic to handle opening the selected cash register
+      } else {
+        alert('Please select a cash register.');
+      }
+    });
+  </script>
 </Layout>
