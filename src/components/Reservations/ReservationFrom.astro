@@ -3,101 +3,119 @@ import Form from "@components/ui/Forms/Form.astro";
 import FormInput from "@components/ui/Forms/FormInput.astro";
 import FormSelect from "@components/ui/Forms/FormSelect.astro";
 import SelectOption from "@components/ui/Forms/SelectOption.astro";
-import { convertCustomerDataToJSON } from "@functions/ConvertDataToJSON"
+import { convertCustomerDataToJSON, convertStatusDataToJSON, convertPaymentMethodDataToJSON } from "@functions/ConvertDataToJSON";
+import {  generateReservationID } from '@functions/util';
 import { turso } from "src/turso";
-import type { ReservationData } from "@customTypes/ReservationData";
+
 
 interface Props {
   selectedReservation?: any;
 }
 
-const { selectedReservation } = Astro.props;
+const selectedReservation  = Astro.props.selectedReservation;
+
+
+// Carga datos necesarios
+const customersData = await turso.execute(`SELECT customerID, CONCAT(firstName, ' ', paternalLastName, ' ', maternalLastName) AS customerName FROM Customers;`);
+const paymentMethodsData = await turso.execute(`SELECT paymentMethodID, paymentMethod FROM PaymentMethods;`);
+const statusData = await turso.execute(`SELECT statusID, statusName FROM Status;`);
+
+const customers = convertCustomerDataToJSON(customersData.toJSON());
+const paymentMethods = convertPaymentMethodDataToJSON(paymentMethodsData.toJSON());
+const statuses = convertStatusDataToJSON(statusData.toJSON());
+
+console.log("selectedReservation:", selectedReservation);
+
+
 ---
 
 <Form title="Reservation Data">
   {
     !selectedReservation 
-    ?
-      <FormInput name="reservationID" type="number" placeholder="123456" isRequired>
-        Reservation ID
-      </FormInput>
-      <FormInput name="customerID" type="number" placeholder="Customer ID" isRequired>
-        Customer ID
-      </FormInput>
-
-      <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
-
-      <div class="flex flex-wrap gap-4">
-        <FormInput name="quantity" type="number" placeholder="Number of Tickets" isRequired>
-          Quantity
-        </FormInput>
-
-        <FormSelect name="paymentMethodID" title="Payment Method" isRequired>
-          <SelectOption value="1">Credit Card</SelectOption>
-          <SelectOption value="2">Debit Card</SelectOption>
-          <SelectOption value="3">PayPal</SelectOption>
-          <SelectOption value="4">Cash</SelectOption>
+    ? (
+      <>
+        <FormSelect name="customerID" title="Customer" isRequired>
+          {customers.map((customer) => (
+            <SelectOption value={customer.customerID.toString()}>{customer.customerName}</SelectOption>
+          ))}
         </FormSelect>
 
-        <FormInput name="reservationDate" type="date" isRequired>
-          Reservation Date
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
+
+        <div class="flex flex-wrap gap-4">
+          {/* Aquí ocultamos reservationID, lo generamos automáticamente */}
+          <input type="hidden" name="reservationID" value={generateReservationID()} />
+
+          <FormInput name="quantity" type="number" placeholder="Number of Tickets" isRequired>
+            Quantity
+          </FormInput>
+
+          <FormSelect name="paymentMethodID" title="Payment Method" isRequired>
+            {paymentMethods.map((method) => (
+              <SelectOption value={method.paymentMethodID.toString()}>{method.paymentMethodName}</SelectOption>
+            ))}
+          </FormSelect>
+
+          <FormInput name="reservationDate" type="date" isRequired>
+            Reservation Date
+          </FormInput>
+
+          <FormSelect name="statusID" title="Status" isRequired>
+            {statuses.map((status) => (
+              <SelectOption value={status.statusID.toString()}>{status.statusName}</SelectOption>
+            ))}
+          </FormSelect>
+
+          <FormInput name="total" type="number" step="0.01" placeholder="Total Amount" isRequired>
+            Total
+          </FormInput>
+        </div>
+        <slot/>
+      </>
+    )
+    : (
+      <>
+        {/* Formulario para editar una reserva existente */}
+        <FormInput name="reservationID" type="number" value={selectedReservation.reservationID} isDisabled placeholder="123456">
+          Reservation ID
         </FormInput>
 
-        <FormSelect name="statusID" title="Status" isRequired>
-          <SelectOption value="1">Confirmed</SelectOption>
-          <SelectOption value="2">Canceled</SelectOption>
-          <SelectOption value="3">Pending</SelectOption>
+        <FormSelect name="customerID" title="Customer" isDisabled>
+          {customers.map((customer) => (
+            <SelectOption value={customer.customerID.toString()}>{customer.customerName}</SelectOption>
+          ))}
         </FormSelect>
 
-        <FormInput name="total" type="number" step="0.01" placeholder="Total Amount" isRequired>
-          Total
-        </FormInput>
-      </div>
-      <slot/>
-    :
-      <FormInput name="reservationID" type="number" value={selectedReservation.reservationID} isDisabled placeholder="123456">
-        Reservation ID
-      </FormInput>
-      <FormInput name="customerID" type="number" value={selectedReservation.customerID} isDisabled placeholder="Customer ID" >
-        Customer ID
-      </FormInput>
-
-      <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
-
-      <div class="flex flex-wrap gap-4">
-        <FormInput name="quantity" type="number" value={selectedReservation.quantity} isDisabled placeholder="Number of Tickets" >
-          Quantity
-        </FormInput>
-
-        <FormSelect name="paymentMethodID" title="Payment Method" isDisabled >
-          {selectedReservation.paymentMethodID && (
-            <SelectOption value={selectedReservation.paymentMethodID} isSelected>
-              {selectedReservation.paymentMethodID === 1 ? "Credit Card" : 
-               selectedReservation.paymentMethodID === 2 ? "Debit Card" :
-               selectedReservation.paymentMethodID === 3 ? "PayPal" :
-               "Cash"}
-            </SelectOption>
-          )}
+        <FormSelect name="reservationDate" title="Reservation Date" isDisabled>
+            <SelectOption value={selectedReservation.customerID}>
+            {selectedReservation.customerName}</SelectOption>
         </FormSelect>
 
-        <FormInput name="reservationDate" type="date" value={selectedReservation.reservationDate} isDisabled >
-          Reservation Date
-        </FormInput>
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
 
-        <FormSelect name="statusID" title="Status" isDisabled>
-          {selectedReservation.statusID && (
-            <SelectOption value={selectedReservation.statusID} isSelected>
-              {selectedReservation.statusID === 1 ? "Confirmed" : 
-               selectedReservation.statusID === 2 ? "Canceled" :
-               "Pending"}
-            </SelectOption>
-          )}
-        </FormSelect>
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="quantity" type="number" value={selectedReservation.quantity} placeholder="Number of Tickets" isDisabled >
+            Quantity
+          </FormInput>
 
-        <FormInput name="total" type="number" step="0.01" value={selectedReservation.total} placeholder="Total Amount" isDisabled >
-          Total
-        </FormInput>
-      </div>
-      <slot/>
+          <FormSelect name="paymentMethodID" title="Payment Method" isDisabled>
+            {paymentMethods.map((method) => (
+              <SelectOption value={method.paymentMethodID.toString()}>{method.paymentMethodName}</SelectOption>
+            ))}
+          </FormSelect>
+
+          <FormSelect name="statusID" title="Status" isDisabled>
+            {statuses.map((status) => (
+              <SelectOption value={status.statusID.toString()}>{status.statusName}</SelectOption>
+            ))}
+          </FormSelect>
+          
+          <FormInput name="total" type="number" step="0.01" value={selectedReservation.paymentMethod} placeholder="Total Amount" isDisabled >
+            Total
+          </FormInput>    
+        </div>
+        <slot/>
+      </>
+    )
   }
 </Form>

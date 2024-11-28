@@ -1,0 +1,105 @@
+---
+import Form from "@components/ui/Forms/Form.astro";
+import FormInput from "@components/ui/Forms/FormInput.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import { convertCustomerDataToJSON, convertStatusDataToJSON, convertPaymentMethodDataToJSON } from "@functions/ConvertDataToJSON";
+import { generateReservationID } from '@functions/util';
+import { turso } from "src/turso";
+
+// Fetch necessary data
+const customersData = await turso.execute(`
+    SELECT customerID, 
+           CONCAT(firstName, ' ', paternalLastName, ' ', maternalLastName) AS customerName 
+    FROM Customers
+`);
+const paymentMethodsData = await turso.execute(`
+    SELECT paymentMethodID, paymentMethod 
+    FROM PaymentMethods
+`);
+const statusData = await turso.execute(`
+    SELECT statusID, statusName 
+    FROM Status
+`);
+
+const customers = convertCustomerDataToJSON(customersData.toJSON());
+const paymentMethods = convertPaymentMethodDataToJSON(paymentMethodsData.toJSON());
+const statuses = convertStatusDataToJSON(statusData.toJSON());
+const newReservationID = generateReservationID();
+---
+
+<Form title="Create New Reservation">
+    <div class="flex flex-wrap gap-4">
+        {/* Hidden input for auto-generated reservation ID */}
+        <input 
+            type="hidden" 
+            name="reservationID" 
+            value={newReservationID} 
+        />
+
+        <FormSelect 
+            name="customerID" 
+            title="Customer" 
+            isRequired
+        >
+            {customers.map((customer) => (
+                <SelectOption value={customer.customerID.toString()}>
+                    {customer.customerName}
+                </SelectOption>
+            ))}
+        </FormSelect>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Reservation Details</h3>
+
+        <FormInput 
+            name="quantity" 
+            type="number" 
+            placeholder="Number of Tickets" 
+            isRequired
+        >
+            Quantity
+        </FormInput>
+
+        <FormSelect 
+            name="paymentMethodID" 
+            title="Payment Method" 
+            isRequired
+        >
+            {paymentMethods.map((method) => (
+                <SelectOption value={method.paymentMethodID.toString()}>
+                    {method.paymentMethodName}
+                </SelectOption>
+            ))}
+        </FormSelect>
+
+        <FormInput 
+            name="reservationDate" 
+            type="date" 
+            isRequired
+        >
+            Reservation Date
+        </FormInput>
+
+        <FormSelect 
+            name="statusID" 
+            title="Status" 
+            isRequired
+        >
+            {statuses.map((status) => (
+                <SelectOption value={status.statusID.toString()}>
+                    {status.statusName}
+                </SelectOption>
+            ))}
+        </FormSelect>
+
+        <FormInput 
+            name="total" 
+            type="number" 
+            step="0.01" 
+            placeholder="Total Amount" 
+            isRequired
+        >
+            Total
+        </FormInput>
+    </div>
+</Form>
