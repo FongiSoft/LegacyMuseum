@@ -3,6 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import { turso } from '../turso'
 
 const { rows } = await turso.execute('SELECT * FROM Persons')
+const session = Astro.cookies.get("userSes");
+
+if (!session) {
+  return Astro.redirect("/404");
+}
 ---
 
 <Layout title="Dashboard">

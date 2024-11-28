@@ -9,7 +9,11 @@ import WrenchIcon from "@icons/WrenchIcon.astro";
 import ProductIcon from "@icons/ProductIcon.astro";
 import WarehouseIcon from "@icons/WarehouseIcon.astro";
 import ClipboardListIcon from "@icons/ClipboardListIcon.astro";
+import ReceptionIcon from "../icons/ReceptionIcon.astro";
 import SalesIcon from "@icons/SalesIcon.astro";
+
+const session = Astro.cookies.get("userSes")?.json();
+const name = session?.name + " "+ session?.lastName;
 ---
 
 <aside
@@ -48,11 +52,23 @@ import SalesIcon from "@icons/SalesIcon.astro";
         <ClipboardListIcon slot="icon" />
         Purchase Order
       </SideBarLink>
+      <SideBarLink href="/reception">
+        <ReceptionIcon slot="icon" />
+        Reception
+      </SideBarLink>
       <SideBarLink href="/sales">
         <SalesIcon slot="icon" />
         Sales
       </SideBarLink>
     </nav>
-    <MiniProfile name="Pepe Pecas" />
+    {
+      session? 
+      <MiniProfile name={session? name : "Getting name"} /> 
+      :
+      <a href="/login" class="flex items-center justify-center m-4 rounded-lg border-2 border-LegacyBlue-600 hover:border-LegacyBlue-800 hover:bg-LegacyBlue-600 duration-150 hover:text-white font-medium text-gray-800 dark:text-gray-200 py-2">
+          Log in
+      </a>
+    }
+    
   </div>
 </aside>

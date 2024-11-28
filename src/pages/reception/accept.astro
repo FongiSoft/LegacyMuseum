@@ -1,0 +1,9 @@
+---
+import { turso } from "src/turso";
+
+const receptionID = Astro.url.searchParams.get("receptionID");
+
+await turso.execute(`UPDATE Receptions SET statusID = 17 WHERE receptionID = ${receptionID}`);
+
+return Astro.redirect('/reception')
+---
