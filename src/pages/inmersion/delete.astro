@@ -1,0 +1,22 @@
+---
+import { turso } from "src/turso";
+
+// Obtén el parámetro "immersionID" de la URL
+const immersionID = Astro.url.searchParams.get("immersionID");
+
+if (immersionID) {
+  // Verifica que immersionID sea un número válido
+  const parsedImmersionID = parseInt(immersionID, 10);
+  if (isNaN(parsedImmersionID)) {
+    console.error("ID de inmersión no válido.");
+  } else {
+    // Ejecuta la eliminación en la tabla 'Immersions'
+    await turso.execute(`
+      DELETE FROM Immersions WHERE immersionID = ${parsedImmersionID};
+    `);
+  }
+}
+
+// Redirige a la lista de inmersiones
+return Astro.redirect('/immersions');
+---

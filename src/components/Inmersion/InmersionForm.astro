@@ -1,0 +1,125 @@
+---
+import Form from "@components/ui/Forms/Form.astro";
+import FormInput from "@components/ui/Forms/FormInput.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import ConvertImmersionDataToJSON from "@functions/ConvertDataToJSON";
+import { turso } from "src/turso";
+import type { ImmersionData } from '@customTypes/InmersionData';
+
+interface Props {
+  selectedImmersion?: ImmersionData; // Actualizamos el tipo a ImmersionData
+}
+
+const { selectedImmersion } = Astro.props;
+---
+
+<Form title="Immersion Data">
+  {
+    !selectedImmersion 
+    ? 
+      <>
+        <FormInput name="immersionID" type="number" placeholder="123456" isRequired>
+          Immersion ID
+        </FormInput>
+        <FormInput name="NombreResponsableID" type="number" placeholder="Responsible ID" isRequired>
+          Responsible Name ID
+        </FormInput>
+        <FormInput name="ApellidoPResponsableID" type="number" placeholder="Paternal Last Name ID" isRequired>
+          Responsible Paternal Last Name ID
+        </FormInput>
+        <FormInput name="ApellidoMResponsableID" type="number" placeholder="Maternal Last Name ID" isRequired>
+          Responsible Maternal Last Name ID
+        </FormInput>
+        <FormInput name="SalaLimpiaID" type="number" placeholder="Clean Room ID" isRequired>
+          Clean Room ID
+        </FormInput>
+        <FormInput name="SalaEscaneadaID" type="number" placeholder="Scanned Room ID" isRequired>
+          Scanned Room ID
+        </FormInput>
+        <FormInput name="RevisionFisicaID" type="number" placeholder="Physical Review ID" isRequired>
+          Physical Review ID
+        </FormInput>
+        
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Immersion Details</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="immersionTime" type="number" placeholder="Duration (minutes)" isRequired>
+            Duration
+          </FormInput>
+
+          <FormSelect name="immersionTypeID" title="Immersion Type" isRequired>
+            <SelectOption value="1">Virtual</SelectOption>
+            <SelectOption value="2">Real</SelectOption>
+            <SelectOption value="3">Mixed</SelectOption>
+          </FormSelect>
+
+          <FormInput name="immersionDate" type="date" isRequired>
+            Immersion Date
+          </FormInput>
+
+          <FormInput name="immersionTime" type="number" step="0.01" placeholder="Time Spent (hours)" isRequired>
+            Time Spent
+          </FormInput>
+        </div>
+        <slot/>
+      </>
+    : 
+      <>
+        <FormInput name="immersionID" type="number" value={selectedImmersion.immersionID} isDisabled placeholder="123456">
+          Immersion ID
+        </FormInput>
+        <FormInput name="NombreResponsableID" type="number" value={selectedImmersion.NombreResponsableID} isDisabled placeholder="Responsible ID">
+          Responsible Name ID
+        </FormInput>
+        <FormInput name="ApellidoPResponsableID" type="number" value={selectedImmersion.ApellidoPResponsableID} isDisabled placeholder="Paternal Last Name ID">
+          Responsible Paternal Last Name ID
+        </FormInput>
+        <FormInput name="ApellidoMResponsableID" type="number" value={selectedImmersion.ApellidoMResponsableID} isDisabled placeholder="Maternal Last Name ID">
+          Responsible Maternal Last Name ID
+        </FormInput>
+        <FormInput name="SalaLimpiaID" type="number" value={selectedImmersion.SalaLimpiaID} isDisabled placeholder="Clean Room ID">
+          Clean Room ID
+        </FormInput>
+        <FormInput name="SalaEscaneadaID" type="number" value={selectedImmersion.SalaEscaneadaID} isDisabled placeholder="Scanned Room ID">
+          Scanned Room ID
+        </FormInput>
+        <FormInput name="RevisionFisicaID" type="number" value={selectedImmersion.RevisionFisicaID} isDisabled placeholder="Physical Review ID">
+          Physical Review ID
+        </FormInput>
+
+        <h3 class="text-xl dark:text-white font-semibold mb-4">Immersion Details</h3>
+
+        <div class="flex flex-wrap gap-4">
+          <FormInput name="immersionTime" type="number" value={selectedImmersion.immersionTime} isDisabled placeholder="Duration (minutes)">
+            Duration
+          </FormInput>
+
+          <FormSelect name="immersionTypeID" title="Immersion Type" value={selectedImmersion.immersionTypeID} isDisabled>
+            <SelectOption value="1">Realidad Virtual</SelectOption>
+            <SelectOption value="2">Realidad Aumentada</SelectOption>
+            <SelectOption value="3">Experiencia Sensorial</SelectOption>
+            <SelectOption value="4">Proyecciones Inmersivas</SelectOption>
+            <SelectOption value="5">Interactiva</SelectOption>
+            <SelectOption value="6">Holografía Interactiva</SelectOption>
+            <SelectOption value="7">Simulación Física</SelectOption>
+            <SelectOption value="8">Realidad Mixta</SelectOption>
+            <SelectOption value="9">Narrativa Inmersiva</SelectOption>
+            <SelectOption value="10">Inmersión Sonora</SelectOption>
+            <SelectOption value="11">Mapping Proyectado</SelectOption>
+            <SelectOption value="12">Interacción con Inteligencia Artificial</SelectOption>
+            <SelectOption value="13">Entornos de Juego</SelectOption>
+        </FormSelect>
+
+          <FormInput name="immersionDate" type="date" value={selectedImmersion.immersionDate ? selectedImmersion.immersionDate.toISOString().split('T')[0] : ''} isDisabled>
+            Immersion Date
+          </FormInput>
+
+          <FormInput name="immersionTime" type="number" step="0.01" value={selectedImmersion.immersionTime} placeholder="Time Spent (hours)" isDisabled>
+            Time Spent
+          </FormInput>
+        </div>
+        <slot/>
+      </>
+  }
+</Form>

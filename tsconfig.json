@@ -8,6 +8,7 @@
       "@form/*": ["src/components/ui/Forms/*"],
       "@icons/*": ["src/components/ui/icons/*"],
       "@customTypes/*": ["src/types/*"],
+      "@types/*": ["types/*"]
     }
   }
 }

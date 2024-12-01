@@ -9,9 +9,10 @@ interface Props {
   placeholder?: string;
   value?: string | number;
   isDisabled?: boolean;
+  step?: string | number; // Agrega esta línea
 }
 
-const { title, type, placeholder, isRequired, name, value, isDisabled } =
+const { title, type, placeholder, isRequired, name, value, isDisabled, step } =
   Astro.props;
 ---
 
@@ -31,6 +32,7 @@ const { title, type, placeholder, isRequired, name, value, isDisabled } =
     value={value}
     required={isRequired}
     disabled={isDisabled}
+    step={step}
     aria-describedby="helper-text-explanation"
     appearance-none
     class={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 

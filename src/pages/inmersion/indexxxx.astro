@@ -1,0 +1,335 @@
+<!--
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';    
+---
+
+<Layout title="Dashboard">
+    <main class="contenido-principal">
+        <p><b>Gestión de Inmersión</b></p>
+
+        <!-- Textbox date 
+        <div class="fila-entradas" style="display: flex; justify-content: flex-end; margin-top: -10px;">
+            <div class="grupo-entrada" style="width: 290px; margin-bottom: 20px;">
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" />
+            </div>
+        </div>
+
+        <div class="txt-arriba1">
+            <a><b>Preparación de Sala</b></a>
+        </div>
+
+        <!-- Primera fila de entradas 
+        <div class="fila-entradas">
+            <div class="grupo-entrada">
+                <label for="id">ID</label>
+                <input type="number" id="id" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="responsable">Nombre Responsable</label>
+                <input type="text" id="responsable" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="responsable">Apellido Paterno</label>
+                <input type="text" id="ap1" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="responsable">Apellido Materno</label>
+                <input type="text" id="am1" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="limpia">Sala Limpia</label>
+                <input type="email" id="limpia" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="escaneada">Sala Escaneada</label>
+                <input type="text" id="escaneada" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="fisica">Revisión Física</label>
+                <input type="text" id="fisica" />
+            </div>
+        </div>
+
+        <div class="txt-arriba">
+            <a><b>Estado de inmersión de los visitantes</b></a>
+        </div>
+
+        <!-- Segunda fila de entradas 
+        <div class="fila-entradas">
+            <div class="grupo-entrada">
+                <label for="tiempo">Tiempo Inmersión (minutos)</label>
+                <input type="text" id="tiempo" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="tipo">Tipo</label>
+                <input type="text" id="tipo" list="opciones-tipo" />
+                <datalist id="opciones-tipo">
+                    <option value="Realidad Virtual">
+                    <option value="Realidad Aumentada">
+                    <option value="Experiencia Sensorial">
+                    <option value="Proyecciones Inmersivas">
+                    <option value="Interactiva">
+                    <option value="Holografica Interactiva">
+                    <option value="Simulacion Fisica">
+                    <option value="Realidad Mixta">
+                    <option value="Narrativa Inmersiva">
+                    <option value="Inmersión Sonora">
+                    <option value="Mapping Proyectado">
+                    <option value="Interacción Con IA">
+                    <option value="Entornos De Juego"></option>
+                </datalist>
+            </div>
+        </div>
+
+        <div class="txt-arriba">
+            <a><b>Cierre de instalaciones</b></a>
+        </div>
+
+        <!-- Tercera fila de entradas 
+        <div class="fila-entradas">
+            <div class="grupo-entrada">
+                <label for="NResponsable">Nombre Responsable</label>
+                <input type="text" id="NResponsable" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="ApellidoP">Apellido paterno</label>
+                <input type="text" id="ApellidoP" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="ApellidoM">Apellido materno</label>
+                <input type="text" id="ApellidoM" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="Hora">Hora</label>
+                <input type="text" id="Hora" />
+            </div>
+            <div class="grupo-entrada">
+                <label for="Idsala">Id Sala</label>
+                <input type="text" id="Idsala" />
+            </div>
+        </div>
+
+        <!-- Fila para botones y texto 
+        <div class="fila-botones">
+            <div class="boton-container">
+                <a href="/test">
+                <button class="boton" id="guardar-btn">Guardar</button>
+                </a>
+                <button class="boton">Regresar</button>
+                <i class="fas fa-info-circle"></i>
+                <span class="texto-descriptivo">Este registro modificará la base de datos</span>
+            </div>
+        </div>
+    </main>
+
+	<style>
+
+
+h1 {
+    color:blue;
+    font-size: 25px;
+}
+
+p {
+    font-size:30px;
+    margin-top: 0;
+    margin-bottom: 0;
+	color: white;
+}
+
+
+.contenido-principal {
+    margin-left: 0px;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.fila-entradas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 0px;
+}
+
+
+.grupo-entrada {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.grupo-entrada input {
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    width: 90%;
+    box-sizing: border-box;
+	color: black;
+}
+
+
+.grupo-entrada label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+.grupo-entrada.full-width {
+    grid-column: span 4;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.grupo-entrada.full-width input {
+    width: 100%; 
+}
+
+
+.fila-botones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-top: 50px;
+}
+
+.boton-container {
+    display: flex;
+    margin-left: 280px;
+    align-items: center;
+    flex-grow: 1;
+}
+
+label {
+    color: #9faab6;
+}
+
+.texto-descriptivo {
+    margin-left: 5px;
+}
+
+a {
+    font-size: 15px;
+}
+
+.txt-arriba {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.txt-arriba1 {
+    margin-bottom: 30px;
+}
+
+
+.boton {
+    background-color: #495055; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 15px 60px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+    </style>
+
+<script type="module">
+    if (typeof window !== "undefined") {
+        const guardarBtn = document.getElementById('guardar-btn');
+
+        guardarBtn.addEventListener('click', function () {
+            // Crear un objeto para el nuevo registro
+            const nuevoRegistro = {
+                fecha: document.getElementById('fecha').value,
+                id: document.getElementById('id').value,
+                responsable: document.getElementById('responsable').value,
+                ap1: document.getElementById('ap1').value,
+                am1: document.getElementById('am1').value,
+                limpia: document.getElementById('limpia').value,
+                escaneada: document.getElementById('escaneada').value,
+                fisica: document.getElementById('fisica').value,
+                tiempo: document.getElementById('tiempo').value,
+                tipo: document.getElementById('tipo').value,
+                NResponsable: document.getElementById('NResponsable').value,
+                ApellidoP: document.getElementById('ApellidoP').value,
+                ApellidoM: document.getElementById('ApellidoM').value,
+                Hora: document.getElementById('Hora').value,
+                Idsala: document.getElementById('Idsala').value,
+            };
+
+            // Validar que todos los campos estén llenos
+            for (const key in nuevoRegistro) {
+                if (!nuevoRegistro[key]) {
+                    alert(`Por favor, complete el campo: ${key}`);
+                    return;
+                }
+            }
+
+            // Recuperar registros existentes
+            const registrosExistentes = JSON.parse(localStorage.getItem('registros')) || [];
+
+            // Añadir el nuevo registro a la lista
+            registrosExistentes.push(nuevoRegistro);
+
+            // Guardar la lista actualizada en el localStorage
+            localStorage.setItem('registros', JSON.stringify(registrosExistentes));
+            alert('Registro guardado con éxito.');
+            mostrarRegistros(); // Mostrar registros después de guardar
+
+            // Redirigir a test.astro
+            window.location.href = '/test'; // Asegúrate de que la ruta sea correcta
+
+            mostrarRegistros();
+        });
+
+        // Función para mostrar registros guardados
+        function mostrarRegistros() {
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const divRegistros = document.getElementById('registros-guardados');
+            divRegistros.innerHTML = ''; // Limpiar el contenedor antes de mostrar nuevos registros
+
+            if (registros.length === 0) {
+                divRegistros.innerHTML = '<p>No hay registros guardados.</p>';
+                return;
+            }
+
+            registros.forEach((registro, index) => {
+                divRegistros.innerHTML += `
+                    <div>
+                        <h4>Registro ${index + 1}</h4>
+                        <p>Fecha: ${registro.fecha}</p>
+                        <p>ID: ${registro.id}</p>
+                        <p>Nombre Responsable: ${registro.responsable}</p>
+                        <p>Apellido Paterno: ${registro.ap1}</p>
+                        <p>Apellido Materno: ${registro.am1}</p>
+                        <p>Sala Limpia: ${registro.limpia}</p>
+                        <p>Sala Escaneada: ${registro.escaneada}</p>
+                        <p>Revisión Física: ${registro.fisica}</p>
+                        <p>Tiempo Inmersión: ${registro.tiempo}</p>
+                        <p>Tipo: ${registro.tipo}</p>
+                        <p>Nombre Responsable (Cierre): ${registro.NResponsable}</p>
+                        <p>Apellido Paterno (Cierre): ${registro.ApellidoP}</p>
+                        <p>Apellido Materno (Cierre): ${registro.ApellidoM}</p>
+                        <p>Hora: ${registro.Hora}</p>
+                        <p>ID Sala: ${registro.Idsala}</p>
+                    </div>
+                    <hr>
+                `;
+            });
+        }
+
+        // Mostrar registros al cargar la página
+        mostrarRegistros();
+    }
+</script>
+</Layout>
+-->

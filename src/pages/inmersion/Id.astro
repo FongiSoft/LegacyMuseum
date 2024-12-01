@@ -1,0 +1,92 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import ImmersionForm from "@components/Inmersion/InmersionForm.astro";
+import { turso } from "src/turso";
+import convertImmersionDataToJSON from "@functions/ConvertDataToJSON";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+import { immersionTypeTextToId } from "@functions/immersionTypeTextToId";
+
+// Obtiene el 'immersionID' de los parámetros de la URL
+const { immersionID } = Astro.params;
+
+// Asegúrate de que immersionID esté disponible y sea válido
+if (!immersionID || isNaN(Number(immersionID))) {
+  return Astro.redirect("/immersions"); // Si no es válido, redirige a la lista de inmersiones
+}
+
+// Obtiene los datos de la inmersión desde la base de datos
+const rows = await turso.execute(
+  `SELECT * FROM Immersions WHERE immersionID = ${immersionID}`
+);
+
+// Convierte los datos a formato JSON
+const result = convertImmersionDataToJSON(rows.toJSON());
+
+// Manejo del formulario cuando se envía el POST
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+
+  // Obtener datos del formulario y asegurarse de que sean válidos
+  const immersionID = formData.get("immersionID")?.toString() || '';
+  const immersionTypeText = formData.get("immersionType")?.toString() || '';
+  const userID = formData.get("userID")?.toString() || '';
+  const duration = formData.get("duration")?.toString() || '0';
+  const immersionDate = formData.get("immersionDate")?.toString() || '';
+  const timeSpent = parseFloat(formData.get("timeSpent")?.toString() || '0');
+
+  // Otros campos que podrían estar presentes
+  const NombreResponsableID = formData.get("NombreResponsableID")?.toString() || '';
+  const ApellidoPResponsableID = formData.get("ApellidoPResponsableID")?.toString() || '';
+  const ApellidoMResponsableID = formData.get("ApellidoMResponsableID")?.toString() || '';
+  const SalaLimpiaID = formData.get("SalaLimpiaID")?.toString() || '';
+  const SalaEscaneadaID = formData.get("SalaEscaneadaID")?.toString() || '';
+  const RevisionFisicaID = formData.get("RevisionFisicaID")?.toString() || '';
+  const NombreResponsableCierreID = formData.get("NombreResponsableCierreID")?.toString() || '';
+  const ApellidoPResponsableCierreID = formData.get("ApellidoPResponsableCierreID")?.toString() || '';
+  const ApellidoMResponsableCierreID = formData.get("ApellidoMResponsableCierreID")?.toString() || '';
+  const HoraID = formData.get("HoraID")?.toString() || '';
+
+  // Convertir tipo de inmersión y asegurar que los valores sean numéricos
+  const immersionTypeConvertedID = immersionTypeTextToId(immersionTypeText);
+  const userIDNum = parseInt(userID, 10);
+  const durationNum = parseInt(duration, 10);
+
+  // Validar los datos antes de actualizar en la base de datos
+  if (immersionID && userIDNum && immersionTypeConvertedID && durationNum && immersionDate && !isNaN(timeSpent)) {
+    // Actualizar todos los datos en la tabla de inmersiones
+    await turso.execute(`
+      UPDATE Immersions
+      SET 
+        immersionTypeID = ${immersionTypeConvertedID}, 
+        userID = ${userIDNum}, 
+        duration = ${durationNum},
+        immersionDate = '${immersionDate}',
+        timeSpent = ${timeSpent},
+        NombreResponsableID = ${NombreResponsableID},
+        ApellidoPResponsableID = ${ApellidoPResponsableID},
+        ApellidoMResponsableID = ${ApellidoMResponsableID},
+        SalaLimpiaID = ${SalaLimpiaID},
+        SalaEscaneadaID = ${SalaEscaneadaID},
+        RevisionFisicaID = ${RevisionFisicaID},
+        NombreResponsableCierreID = ${NombreResponsableCierreID},
+        ApellidoPResponsableCierreID = ${ApellidoPResponsableCierreID},
+        ApellidoMResponsableCierreID = ${ApellidoMResponsableCierreID},
+        HoraID = ${HoraID}
+      WHERE immersionID = ${immersionID};
+    `);
+
+    return Astro.redirect("/immersions");
+  } else {
+    console.error("Datos incompletos o inválidos en el formulario.");
+  }
+}
+---
+
+<Layout title="Editar Inmersión">
+  <ImmersionForm selectedImmersion={result[0]}>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+    </div>
+  </ImmersionForm> <!-- Aquí pasas la inmersión seleccionada -->
+</Layout>

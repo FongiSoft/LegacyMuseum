@@ -1,0 +1,66 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import ImmersionForm from "@components/Inmersion/InmersionForm.astro"; // Asegúrate de que el path sea correcto
+import { turso } from "src/turso";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+
+  const immersionID = formData.get('immersionID');
+  const immersionTypeID = formData.get('immersionTypeID');
+  const NombreResponsableID = formData.get('NombreResponsableID');
+  const ApellidoPResponsableID = formData.get('ApellidoPResponsableID');
+  const ApellidoMResponsableID = formData.get('ApellidoMResponsableID');
+  const SalaLimpiaID = formData.get('SalaLimpiaID');
+  const SalaEscaneadaID = formData.get('SalaEscaneadaID');
+  const RevisionFisicaID = formData.get('RevisionFisicaID');
+  const immersionDate = formData.get('immersionDate');
+  const immersionStatusID = formData.get('immersionStatusID');
+  const immersionTime = formData.get('immersionTime');
+  const NombreResponsableCierreID = formData.get('NombreResponsableCierreID');
+  const ApellidoPResponsableCierreID = formData.get('ApellidoPResponsableCierreID');
+  const ApellidoMResponsableCierreID = formData.get('ApellidoMResponsableCierreID');
+  const HoraID = formData.get('HoraID');
+
+  console.log(immersionID, immersionTypeID, NombreResponsableID, ApellidoPResponsableID, ApellidoMResponsableID, 
+    SalaLimpiaID, SalaEscaneadaID, RevisionFisicaID, immersionDate, immersionStatusID, immersionTime, 
+    NombreResponsableCierreID, ApellidoPResponsableCierreID, ApellidoMResponsableCierreID, HoraID);
+
+  if (
+    immersionID && immersionTypeID && NombreResponsableID && ApellidoPResponsableID && ApellidoMResponsableID && 
+    SalaLimpiaID && SalaEscaneadaID && RevisionFisicaID && immersionDate && immersionStatusID && immersionTime && 
+    NombreResponsableCierreID && ApellidoPResponsableCierreID && ApellidoMResponsableCierreID && HoraID
+  ) {
+    // Inserción de los datos en la tabla de inmersiones
+    await turso.execute(`
+      INSERT INTO Immersions (
+        immersionID, immersionTypeID, NombreResponsableID, ApellidoPResponsableID, ApellidoMResponsableID,
+        SalaLimpiaID, SalaEscaneadaID, RevisionFisicaID, immersionDate, immersionStatusID, immersionTime,
+        NombreResponsableCierreID, ApellidoPResponsableCierreID, ApellidoMResponsableCierreID, HoraID
+      )
+      VALUES (
+        ${immersionID}, ${immersionTypeID}, ${NombreResponsableID}, ${ApellidoPResponsableID}, ${ApellidoMResponsableID},
+        ${SalaLimpiaID}, ${SalaEscaneadaID}, ${RevisionFisicaID}, '${immersionDate}', ${immersionStatusID}, ${immersionTime},
+        ${NombreResponsableCierreID}, ${ApellidoPResponsableCierreID}, ${ApellidoMResponsableCierreID}, ${HoraID}
+      )
+    `);
+
+    return Astro.redirect('/immersions');
+  } else {
+    console.error("Datos incompletos en el formulario.");
+  }
+}
+---
+
+<Layout title="Agregar Inmersión">
+  <ImmersionForm>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+      <SubmitBtn>
+        Agregar
+      </SubmitBtn>
+    </div>
+  </ImmersionForm>
+</Layout>
