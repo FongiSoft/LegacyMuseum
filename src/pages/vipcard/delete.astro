@@ -1,9 +1,0 @@
----
-import { turso } from "src/turso";
-
-const cardNumber = Astro.url.searchParams.get("cardNumber");
-
-await turso.execute(`DELETE FROM VIPCards WHERE vipCardID = ${cardNumber}`);
-
-return Astro.redirect('/vipcard')
----

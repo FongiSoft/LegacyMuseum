@@ -1,9 +1,0 @@
----
-import { turso } from "src/turso";
-
-const VramID = Astro.url.searchParams.get("vramID");
-
-await turso.execute(`UPDATE VRAMaintenances SET statusID = 1 WHERE vraMaintenanceID = ${VramID}`);
-
-return Astro.redirect('/manteinance/VRA')
----

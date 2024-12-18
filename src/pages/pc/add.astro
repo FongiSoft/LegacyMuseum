@@ -1,0 +1,47 @@
+---
+import BackBtn from "@components/ui/Buttons/BackBtn.astro";
+import Layout from "../../layouts/Layout.astro";
+import PcForm from "@components/Pc/PcForm.astro";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+import { db } from "astro:db";
+import { PC } from "astro:db";
+import { isDbError } from "astro:db";
+
+if (Astro.request.method === 'POST') {
+  // Parse form data
+  const formData = await Astro.request.formData();
+  const pcID = formData.get('pcID');
+  const areaID = formData.get('areaID');
+  const pcName = formData.get('pcName');
+
+  if (typeof pcID === 'string' && typeof areaID === 'string' && typeof pcName === 'string') {
+			// Insert data from the form to the User and upload it to the DB
+		try {
+			await db.insert(PC).values({
+			  id: Number(pcID),
+			  name: pcName,
+			  areaID: Number(areaID),
+      });
+		} catch (e) {
+			if (isDbError(e)) {
+				console.error(`No se puede insertar un PC con nombre ${pcName}\n\n${e.message}`);
+    	} else {
+				console.error('Se ha producido un error inesperado');
+			}
+		}
+	}
+
+  return Astro.redirect('/pc')
+}
+---
+
+<Layout title="Alta PC">
+  <PcForm>
+    <div class="flex justify-end max-w-full mx-auto px-8">
+      <BackBtn />
+      <SubmitBtn>
+        Agregar
+      </SubmitBtn>
+    </div>
+  </PcForm>
+</Layout>

@@ -1,16 +1,9 @@
 ---
 import SideBarLink from "./SideBarLink.astro";
-import TicketIcon from "@icons/TicketIcon.astro";
-import VipCardIcon from "@icons/VipCardIcon.astro";
+import PcIcon from "@icons/PcIcon.astro";
+import ReportIcon from "../icons/ReportIcon.astro";
 import Divider from "../Divider.astro";
 import DashBoardIcon from "@icons/DashBoardIcon.astro";
-import MiniProfile from "./MiniProfile.astro";
-import WrenchIcon from "@icons/WrenchIcon.astro";
-import ProductIcon from "@icons/ProductIcon.astro";
-import WarehouseIcon from "@icons/WarehouseIcon.astro";
-import ClipboardListIcon from "@icons/ClipboardListIcon.astro";
-import ReceptionIcon from "@icons/ReceptionIcon.astro";
-import SalesIcon from "@icons/SalesIcon.astro";
 
 const session = Astro.cookies.get("userSes")?.json();
 const name = session?.name + " "+ session?.lastName;
@@ -23,52 +16,24 @@ const name = session?.name + " "+ session?.lastName;
     <nav>
       <SideBarLink href="/">
         <DashBoardIcon slot="icon" />
-        Dashboard
+        Inicio
       </SideBarLink>
 
       <Divider />
 
-      <SideBarLink href="/tickets">
-        <TicketIcon slot="icon" />
-        Tickets
+      <SideBarLink href="/pc">
+        <PcIcon slot="icon" />
+        PC's
       </SideBarLink>
-      <SideBarLink href="/vipcard">
-        <VipCardIcon slot="icon" />
-        VIP Cards
-      </SideBarLink>
-      <SideBarLink href="/manteinance">
-        <WrenchIcon slot="icon" />
-        Manteinance
-      </SideBarLink>
-      <SideBarLink href="/products">
-        <ProductIcon slot="icon" />
-        Products
-      </SideBarLink>
-      <SideBarLink href="/suppliers">
-        <ProductIcon slot="icon" />
-        Suppliers
-      </SideBarLink>
-      <SideBarLink href="/customers">
-        <ProductIcon slot="icon" />
-        Customers
-      </SideBarLink>
-      <SideBarLink href="/warehouse">
-        <WarehouseIcon slot="icon" />
-        Warehouse
-      </SideBarLink>
-      <SideBarLink href="/purchaseOrders">
-        <ClipboardListIcon slot="icon" />
-        Purchase Order
-      </SideBarLink>
-      <SideBarLink href="/reception">
-        <ReceptionIcon slot="icon" />
-        Reception
-      </SideBarLink>
-      <SideBarLink href="/sales">
-        <SalesIcon slot="icon" />
-        Sales
+
+      <Divider />
+
+      <SideBarLink href="/">
+        <ReportIcon slot="icon" />
+        Reportes
       </SideBarLink>
     </nav>
+    <!--  
     {
       session? 
       <MiniProfile name={session? name : "Getting name"} /> 
@@ -76,7 +41,7 @@ const name = session?.name + " "+ session?.lastName;
       <a href="/login" class="flex items-center justify-center m-4 rounded-lg border-2 border-LegacyBlue-600 hover:border-LegacyBlue-800 hover:bg-LegacyBlue-600 duration-150 hover:text-white font-medium text-gray-800 dark:text-gray-200 py-2">
           Log in
       </a>
-    }
+    }-->
     
   </div>
 </aside>

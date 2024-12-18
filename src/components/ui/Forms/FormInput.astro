@@ -18,7 +18,7 @@ const { title, type, placeholder, isRequired, name, value, isDisabled } =
 <div class="flex-1 mb-4">
   <label
     for={name}
-    class="block text-sm dark:text-white font-medium mb-1 capitalize"
+    class="block text-xl dark:text-white font-medium mb-1 capitalize"
   >
     {title ? title : <slot />}
     {isRequired && <span class="text-red-500"> *</span>}

@@ -13,7 +13,7 @@ const { title, isRequired, name, isDisabled } = Astro.props;
 <div class="flex-1 min-w-[200px] mb-4">
   <label
     for={name}
-    class="block text-sm dark:text-white font-medium mb-1 capitalize"
+    class="block text-xl dark:text-white font-medium mb-1 capitalize"
   >
     {title ? title : <slot name="title" />}
     {isRequired && <span class="text-red-500"> *</span>}

@@ -1,0 +1,35 @@
+---
+import { User } from "astro:db";
+import { PC, eq, db } from "astro:db";
+import Layout from "src/layouts/Layout.astro";
+
+const pcName = Astro.url.searchParams.get("pcName");
+const area = Astro.url.searchParams.get("area");
+const userID = Astro.url.searchParams.get("userID");
+
+const user = await db.select().from(User).where(eq(User.id, Number(userID)))
+
+const { fullName } = user[0]
+---
+<Layout title="Has sido asignad@!">
+  <div class="flex items-center justify-center flex-col mt-36 max-w-screen-xl mx-auto px-4 md:px-8 md:flex">
+    <h2 class="text-5xl dark:text-white font-bold mb-4">{ fullName }</h2>
+    <p class="text-xl dark:text-gray-300 font-bold mb-4">
+      Se te asignó:
+      <p class="text-5xl border border-LegacyBlue-500 rounded-lg p-4 dark:text-white font-bold mb-4">
+        { pcName }
+      </p>
+    </p>
+    <p class="text-xl dark:text-gray-300 font-bold mb-4">
+      En:
+      <p class="text-5xl border border-LegacyBlue-500 rounded-lg p-4 dark:text-white font-bold mb-4">
+        { area }
+      </p>
+    </p>
+  </div>
+</Layout>
+<script type="module" is:inline>
+  setTimeout(() => {
+    location.href ="/";;
+  }, 10000); // 5000 milisegundos = 5 segundos
+</script>

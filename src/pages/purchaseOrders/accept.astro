@@ -1,9 +1,0 @@
----
-import {turso} from "src/turso";
-
-const purchaseOrderID = Astro.url.searchParams.get("purchaseOrderID");
-
-await turso.execute( `UPDATE PurchaseOrders SET statusID = 17 WHERE PurchaseOrderID = ${purchaseOrderID} `);
-
-return Astro.redirect('/purchaseOrders')
----

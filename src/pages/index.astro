@@ -1,47 +1,124 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Form from "@form/Form.astro";
+import FormInput from "@form/FormInput.astro";
+import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
+import LayoutWTOS from "src/layouts/LayoutWTOS.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import searchPC from "@functions/SearchPC";
+import { verifyUser, userHasSession } from "@functions/verifyUser";
+import type { InputFieldArr } from "@customTypes/InputType";
+import { db } from "astro:db";
+import { Area } from "astro:db";
+import { PC } from "astro:db";
+import { eq } from "astro:db";
 
-const session = Astro.cookies.get("userSes");
+const inputs: InputFieldArr[] = [
+  {
+    name: "userID",
+    label: "Matrícula",
+    type: "text",
+    isRequired: true,
+    placeholder: "20104769",
+  },
+];
 
-if (!session) {
-  return Astro.redirect("/404");
+const areas = await db.select().from(Area)
+let pcName;
+let area;
+
+if (Astro.request.method === 'POST') {
+  // Parse form data
+  const formData = await Astro.request.formData();
+  const userID = formData.get('userID');
+  const fareaID = formData.get('areaID');
+
+  if (typeof userID === 'string' && typeof fareaID === 'string') {
+    if (await verifyUser(Number(userID))){
+      if (await userHasSession(Number(userID))) {
+        await db.update(PC)
+          .set({
+            statusID: 1,
+            userID: null
+          })
+          .where(eq(PC.userID, Number(userID)))
+          return new Response(
+            `<script>
+              alert("La sesion de ${userID} ha sido terminada");
+              window.location.href = "/";
+            </script>`,
+            {
+              headers: { "Content-Type": "text/html" },
+            }
+          );
+      }
+      else {
+        try {
+          const search = await searchPC(Number(fareaID))
+          const { id, name, areaID } = search[0]
+          
+          pcName = name;
+          area = areas.find(room => room.id === areaID)?.name
+  
+          await db.update(PC)
+          .set({
+            statusID: 3,
+            userID: Number(userID)
+          })
+          .where(eq(PC.id, id))
+  
+          return Astro.redirect(`/assigned?pcName=${pcName}&area=${area}&userID=${userID}`)
+        } catch (e: any) {
+          console.error(`No se puede asignar un PC a ${userID}\n\nError: ${e.message}`);
+          return new Response(
+            `<script>
+              alert("No se puede asignar un PC a ${userID}");
+              window.location.href = "/";
+            </script>`,
+            {
+              headers: { "Content-Type": "text/html" },
+            }
+          );
+        }
+      }
+    }
+    else{
+      return Astro.redirect('/register')
+    }
+	}
 }
 ---
 
-<Layout title="Dashboard">
-	<div class="flex max-w-screen-xl min-h-[80vh] mx-auto px-4 md:px-8 justify-center items-center flex-col">
-		<h2 class="text-gray-800 text-4xl font-extrabold sm:text-7xl dark:text-white">
-			Welcome 
-		</h2>
-		<div class="typewriter flex justify-center items-center flex-col">
-			<h3 class="text-gray-800 text-xl font-bold sm:text-xl dark:text-gray-200 mt-5">
-				to the future of the legacy
-			</h3>
-		</div>
-		<p class="text-gray-800 text-xl sm:text-lg dark:text-gray-400 m-10 px-32 text-justify">
-			Our mission is to bring history to life by offering visitors the unique opportunity to engage in virtual conversations with important personalities of the past and provide the visitor with a connection through the lens of their MBTI personality type.
-		</p>
+<LayoutWTOS title="Asignación de PC">
+  <div class="flex items-center justify-center flex-col mt-36 max-w-screen-xl mx-auto px-4 md:px-8 md:flex">
+    <Form title="Asignación de PC">
+      {
+        inputs.map((inp) => (
+          <FormInput
+            name={inp.name}
+            type={inp.type}
+            isRequired
+            placeholder={inp.placeholder}
+          >
+            {inp.label}
+          </FormInput>
+        ))
+      }
+	   <FormSelect title="Selecciona Sala" name="areaID">
+		  <SelectOption isSelected value="">--Selecciona una Sala--</SelectOption>
+		  {
+        areas?.map((area) => (
+          <SelectOption value={area.id.toString()}>{area.name}</SelectOption>
+        ))
+		  }
+	  </FormSelect>
+      <div class="flex justify-center items-center min-w-full mt-2">
+        <SubmitBtn> Buscar </SubmitBtn>
+      </div>
+    </Form>
+    <div class="dark:text-white">
+      ¿No estas registrado? <a href="/register" class="text-LegacyBlue-600">¡Registrate!</a>
+    </div>
   </div>
-</Layout>
-<style>
-	.typewriter h3 {
-	overflow: hidden; /* Ensures the content is not revealed until the animation */
-	border-right: .15em solid #2245e3; /* The typwriter cursor */
-	white-space: nowrap; /* Keeps the content on a single line */
-	animation: 
-		typing 3.5s steps(30, end),
-		blink-caret .5s step-end infinite;
-}
+</LayoutWTOS>
 
-/* The typing effect */
-@keyframes typing {
-	from { width: 0 }
-	to { width: 100% }
-}
-
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-	from, to { border-color: transparent }
-	50% { border-color: #2245e3 }
-}
-</style>

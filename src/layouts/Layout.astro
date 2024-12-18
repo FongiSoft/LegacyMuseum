@@ -10,23 +10,18 @@ interface Props {
 
 const { title } = Astro.props;
 
-const session = Astro.cookies.get("userSes");
-
-if (!session) {
-  return Astro.redirect("/404");
-}
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Legacy Museum Landing Page" />
+    <meta name="description" content="Centro de Cómputo Landing Page" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <ViewTransitions/>
     <meta name="generator" content={Astro.generator} />
-    <title>{title} || Legacy Museum</title>
+    <title>{title} || Centro de Cómputo</title>
   </head>
   <body class="flex bg-gray-100 dark:bg-gray-900 min-h-screen bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
     <SideBar/>
@@ -35,7 +30,7 @@ if (!session) {
         <h1
           class="text-LegacyBlue-600 font-bold text-[26px] leading-[38px] dark:text-white"
         >
-          The Legacy Museum
+        Centro de Cómputo UMAD
         </h1>
         <Breadcrumb />
         <slot/>

@@ -2,249 +2,125 @@
 import Form from "@form/Form.astro";
 import FormInput from "@form/FormInput.astro";
 import SubmitBtn from "@components/ui/Buttons/SubmitBtn.astro";
-import { hashPasswrd } from "@functions/registerUser";
-import type { InputType } from "@customTypes/InputType";
-import { turso } from "src/turso";
-import { generateRandomNumber } from "@functions/generateRandomNumber";
 import LayoutWTOS from "src/layouts/LayoutWTOS.astro";
+import FormSelect from "@components/ui/Forms/FormSelect.astro";
+import SelectOption from "@components/ui/Forms/SelectOption.astro";
+import { db } from "astro:db";
+import { User } from "astro:db";
+import { isDbError } from "astro:db";
+import { Major } from "astro:db";
+import { verifyUser } from "@functions/verifyUser";
 
-export interface Inputs {
-  name: string;
-  label: string;
-  type: InputType;
-  isRequired: boolean;
-  placeholder: string;
-}
+let major = await db.select().from(Major);
 
-const generatedEmployeeNumber = generateRandomNumber(15);
-const session = Astro.cookies.get("userSes");
-
-if (session) {
-  Astro.cookies.delete("userSes");
-  return Astro.redirect("/");
-}
-
-if (Astro.request.method === "POST") {
-  // Analizar datos de formulario
+if (Astro.request.method === 'POST') {
+  // Parse form data
   const formData = await Astro.request.formData();
+  const userID = formData.get('userID');
+  const fullName = formData.get('fullName');
+  const majorID = formData.get('major');
 
-  const employeeID = formData.get("employeeID");
-  const name = formData.get("name");
-  const patName = formData.get("paternalSurname");
-  const matName = formData.get("maternalSurname");
-  const phone = formData.get("phone");
-  const email = formData.get("email");
-  const dateBirth = formData.get("dateOfBirth");
-  const passw = formData.get("passwrd");
 
-  //address info
-  const country = formData.get("country");
-  const state = formData.get("state");
-  const city = formData.get("city");
-  const neighborhood = formData.get("neighborhood");
-  const postalCode = formData.get("postalCode");
-  const street = formData.get("street");
-  const outsideNumb = formData.get("outsideNumb");
-
-  //TODO: Do a better UI/UX for register
-  if (
-    typeof passw === "string" &&
-    typeof employeeID === "string" &&
-    typeof name === "string" &&
-    typeof patName === "string" &&
-    typeof matName === "string" &&
-    typeof phone === "string" &&
-    typeof email === "string" &&
-    typeof dateBirth === "string" &&
-    typeof country === "string" &&
-    typeof state === "string" &&
-    typeof city === "string" &&
-    typeof neighborhood === "string" &&
-    typeof postalCode === "string" &&
-    typeof street === "string" &&
-    typeof outsideNumb === "string"
-  ) {
-    //add address first
-    await turso.execute(`
-        INSERT INTO Addresses (
-        country,
-        state,
-        city,
-        neighborhood,
-        postalCode,
-        street,
-        outsideNumb
-        ) VALUES (
-          '${country}',
-          '${state}',
-          '${city}',
-          '${neighborhood}',
-          '${postalCode}',
-          '${street}',
-          '${outsideNumb}'
-        );
-      `);
-
-    const addRes = await turso.execute("SELECT max(AddressID) FROM Addresses;");
-    const addressID = addRes.rows[0]["max(AddressID)"];
-
-    const encryptedPasswrd = hashPasswrd(passw);
-    // Insert Employee
-    await turso.execute(`
-      INSERT INTO Employees (
-        employeeID,
-        firstName,
-        paternalLastName,
-        maternalLastName,
-        phoneNumber,
-        email,
-        dateOfBirth,
-        passwrd,
-        addressID,
-        statusID
-      )VALUES (
-        ${employeeID},
-        '${name}',
-        '${patName}',
-        '${matName}',
-        ${phone},
-        '${email}',
-        '${dateBirth}',
-        '${encryptedPasswrd}',
-        ${addressID},
-        10
+  if (typeof userID === 'string' && typeof fullName === 'string' && typeof majorID === 'string') {
+    if (await verifyUser(Number(userID))){
+			console.error(`El usuario con matricula ${userID} ya existe`);
+      
+      return new Response(
+        `<script>
+          alert("El usuario ${userID} ya existe.");
+          window.location.href = "/register";
+        </script>`,
+        {
+          headers: { "Content-Type": "text/html" },
+        }
       );
-    `);
-  }
-  return Astro.redirect("/login");
+    }
+		try {
+      await db.insert(User).values({
+			  id: Number(userID),
+			  fullName: fullName,
+			  majorID: Number(majorID),
+      });
+      
+      return new Response(
+        `<script>
+          alert("El usuario ${userID} ha sido registrado.");
+          window.location.href = "/";
+        </script>`,
+        {
+          headers: { "Content-Type": "text/html" },
+        }
+      );
+		} catch (e) {
+			if (isDbError(e)) {
+				console.error(`El usuario con matricula ${userID} ya existe\n\n${e.message}`);
+    	} else {
+				console.error('Se ha producido un error inesperado', e);
+			}
+		}
+	}
+
+  
+  return Astro.redirect('/register')
 }
 ---
 
-<LayoutWTOS title="Register your Account">
+<LayoutWTOS title="Registro Nuevo Usuario">
   <div class="mx-8">
-    <Form title="Register">
+    <Form title="Alta de Nuevo Usuario">
       <FormInput
-        name="employeeID"
-        type="number"
+        name="userID"
+        type="text"
         isRequired
-        placeholder="982472834824"
-        value={generatedEmployeeNumber}
+        placeholder="20104669"
       >
-        # Employee ID
+        # Matrícula
       </FormInput>
-      <FormInput
-        name="email"
-        type="email"
-        isRequired
-        placeholder="example@example.com"
-      >
-        Email
-      </FormInput>
-  
-      <h3 class="text-xl dark:text-white font-semibold">
-        Employee Information
-      </h3>
+
   
       <div class="flex flex-wrap gap-2">
-        <FormInput name="name" type="text" isRequired placeholder="John">
-          Name
-        </FormInput>
-  
-        <FormInput
-          name="paternalSurname"
-          type="text"
-          isRequired
-          placeholder="Doe"
-        >
-          Paternal Surname
-        </FormInput>
-  
-        <FormInput
-          name="maternalSurname"
-          type="text"
-          isRequired
-          placeholder="Smith"
-        >
-          Maternal Surname
-        </FormInput>
-  
-        <FormInput name="phone" type="number" isRequired placeholder="1234567890">
-          Phone
-        </FormInput>
-  
-        <FormInput
-          name="dateOfBirth"
-          type="date"
-          isRequired
-          placeholder="1990-01-01"
-        >
-          Date of Birth
-        </FormInput>
-      </div>
-  
-      <h3 class="text-xl dark:text-white font-semibold mb-4">
-        Address Information
-      </h3>
-  
-      <div class="flex flex-wrap gap-2">
-        <FormInput name="country" type="text" isRequired placeholder="México">
-          Country
-        </FormInput>
-  
-        <FormInput
-          name="state"
-          type="text"
-          isRequired
-          placeholder="Ciudad de México"
-        >
-          State
-        </FormInput>
-  
-        <FormInput name="city" type="text" isRequired placeholder="Coyoacán">
-          City
-        </FormInput>
-  
-        <FormInput
-          name="neighborhood"
-          type="text"
-          isRequired
-          placeholder="Centro"
-        >
-          Neighborhood
+        <FormInput name="fullName" type="text" isRequired placeholder="Bryan Arturo Barraza García">
+          Nombre Completo
         </FormInput>
       </div>
   
       <div class="flex flex-wrap gap-2">
-        <FormInput name="postalCode" type="text" isRequired placeholder="04000">
-          Postal Code
-        </FormInput>
-  
-        <FormInput
-          name="street"
-          type="text"
-          isRequired
-          placeholder="Av. Universidad"
-        >
-          Street
-        </FormInput>
-  
-        <FormInput name="outsideNumb" type="number" isRequired placeholder="300">
-          Outside Number
-        </FormInput>
-      </div>
-  
-      <h3 class="text-xl dark:text-white font-semibold mb-4">
-        Account Information
-      </h3>
-  
-      <div class="flex flex-wrap gap-2">
-        <FormInput name="passwrd" type="password" isRequired placeholder="123456">
-          Password
-        </FormInput>
+        <FormSelect title="Selecciona Carrera" name="major" isRequired>
+          <SelectOption value="">-- Selecciona La Carrera --</SelectOption>
+          {
+            major?.map((major) => (
+            <SelectOption value={major.id.toString()}>{major.name}</SelectOption>
+          ))
+          }
+          </FormSelect>
       </div>
       <div class="flex justify-end max-w-full mx-auto px-8 flex-wrap gap-2">
-        <SubmitBtn> Register </SubmitBtn>
+        <SubmitBtn> Registrar </SubmitBtn>
       </div>
     </Form>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Validar y transformar el input de userID
+      const userIDInput = document.querySelector('input[name="userID"]') as HTMLInputElement | null;
+      if (userIDInput) {
+        userIDInput.addEventListener('input', () => {
+          userIDInput.value = userIDInput.value.replace(/[^a-zA-Z0-9]/g, ''); // Solo texto y números
+        });
+      }
+  
+      // Validar y transformar el input de fullName
+      const fullNameInput = document.querySelector('input[name="fullName"]') as HTMLInputElement | null;
+      if (fullNameInput) {
+        fullNameInput.addEventListener('input', () => {
+          // Solo letras y espacios
+          fullNameInput.value = fullNameInput.value.replace(/[^a-zA-Z\s]/g, '');
+          // Convertir a mayúsculas
+          fullNameInput.value = fullNameInput.value.toUpperCase();
+        });
+      }
+    });
+  </script>
+  
 </LayoutWTOS>

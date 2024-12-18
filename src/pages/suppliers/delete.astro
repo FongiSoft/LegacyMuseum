@@ -1,9 +1,0 @@
----
-import { turso } from "src/turso";
-
-const supplierID = Astro.url.searchParams.get("supplierID");
-
-await turso.execute(`UPDATE Suppliers SET statusID = 11 WHERE supplierID = ${supplierID}`);
-
-return Astro.redirect('/suppliers')
----

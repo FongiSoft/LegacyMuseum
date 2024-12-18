@@ -1,0 +1,88 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TrashIcon from "@icons/TrashIcon.astro"
+import EditIcon from "@icons/EditIcon.astro"
+import EditRecord from "@components/ui/Tables/EditRecord.astro";
+import ItemStatus from "@components/ui/Tables/ItemStatus.astro";
+import AddRegisterBtn from "@components/ui/Buttons/AddRegisterBtn.astro";
+import { db, PC, Status, Area, User, eq } from "astro:db";
+import CheckIcon from "@components/ui/icons/CheckIcon.astro";
+import ClipboardListIcon from "@components/ui/icons/ClipboardListIcon.astro";
+
+const result = await db.select().from(PC)
+  .innerJoin(Status, eq(Status.id, PC.statusID))
+  .innerJoin(Area, eq(Area.id, PC.areaID))
+---
+
+<Layout title="PC's">
+  <div class="max-w-screen-xl mx-auto px-4 md:px-8">
+    <div class="items-start justify-between md:flex">
+      <div class="max-w-lg">
+        <h3 class="text-gray-800 text-xl font-bold sm:text-4xl dark:text-gray-300">
+          PC's
+        </h3>
+      </div>
+      <div class="mt-3 md:mt-0">
+        <AddRegisterBtn/>
+      </div>
+    </div>
+    <div class="mt-6 shadow-sm border rounded-lg overflow-x-auto backdrop-blur-sm">
+      <table class="w-full table-auto text-sm text-left">
+        <thead class="dark:bg-gray-400/20 dark:text-white bg-gray-50 text-gray-600 font-medium border-b">
+          <tr>
+            <th class="py-3 px-6">Sala</th>
+            <th class="py-3 px-6">PC</th>
+            <th class="py-3 px-6"># Usuario</th>
+            <th class="py-3 px-6">Status</th>
+            <th class="py-3 px-6">Creado En</th>
+            <th class="py-3 px-6"></th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 divide-y">
+          {
+            result.map((item) => (
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.Area?.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.PC?.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white">{item.PC?.userID}</td>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white capitalize">
+                  <ItemStatus  status={item.Status?.name ? item.Status?.name : ""} />
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap dark:text-white capitalize">
+                  {
+                    new Date(item.PC._createdAt).toString().split('GMT')[0].trim()
+                  }
+                </td>
+                <td class="flex items-center justify-center gap-4 m-2 text-right px-6 whitespace-nowrap">
+                  <a
+                    href={`/pc/fix?pcID=${item.PC?.id}`}
+                    class="py-2 px-3 inline-block text-white duration-150 font-medium bg-yellow-500 rounded-lg hover:bg-yellow-400 active:bg-yellow-600 md:text-sm"
+                  >
+                    <ClipboardListIcon/>
+                  </a>
+                  <a
+                    href={`/pc/free?pcID=${item.PC?.id}`}
+                    class="py-2 px-3 inline-block text-white duration-150 font-medium bg-green-600 rounded-lg hover:bg-green-500 active:bg-green-700 md:text-sm"
+                  >
+                    <CheckIcon/>
+                  </a>
+                  
+                  <EditRecord href={`/pc/${item.PC?.id}`}>
+                    <EditIcon/>
+                  </EditRecord>
+
+                  <a
+                    href={`/pc/delete?pcID=${item.PC?.id}`}
+                    class="py-2 px-3 inline-block text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700 md:text-sm"
+                  >
+                    <TrashIcon/>
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>   
